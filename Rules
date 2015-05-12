@@ -13,22 +13,37 @@
 #   item, use the pattern “/about/*/”; “/about/*” will also select the parent,
 #   because “*” matches zero or more characters.
 
+# per doxygen
+compile '/assets/*' do
+end
+
+# per tutto il resto
 compile '*' do
   if item[:extension] == 'css'
     # don’t filter stylesheets
-	filter :relativize_paths, :type => :css
+    # se voglio i path relativi:
+    filter :relativize_paths, :type => :css
   elsif item.binary?
     # don’t filter binary items
   else
-    filter :erb
-    layout 'default'
-	filter :relativize_paths, :type => :html
-	filter :colorize_syntax,
+    # syntax highlighting (dev'essere prima del resto):
+    filter :colorize_syntax,
            :colorizers => { :ruby => :coderay, :cpp => :coderay },
            #:coderay    => { :line_numbers => :table }
 		   :coderay    => {}
 		   #:coderay    => { :css => :style }
+    filter :erb
+    layout 'default'
+    # se voglio i path relativi:
+    filter :relativize_paths, :type => :html
   end
+end
+
+
+# file doxygen nella root
+route '/assets/*' do
+  # /assets/foo.html/ → /foo.html
+  item.identifier[7..-2]
 end
 
 route '*' do
