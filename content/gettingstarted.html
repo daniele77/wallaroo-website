@@ -1,0 +1,568 @@
+---
+title: Getting Started
+---
+<h1>Getting Started</h1>
+
+<p>
+<ul>
+<li> <a href="#Getting_Started">Getting Started</a>
+</li>
+<ul>
+<li> <a href="#Getting_Wallaroo">Getting Wallaroo</a></li>
+<li> <a href="#Compiling_Wallaroo">Compiling Wallaroo</a></li>
+<li> <a href="#External_Dependencies">External Dependencies</a></li>
+<li> <a href="#How_to_build_the_examples">How to build the examples</a></li>
+<ul>
+<li> <a href="#Make">Make</a></li>
+<li><a href="#Visual_Studio">Visual Studio</a></li>
+</ul>
+<li><a href="#How_to_build_your_own_project">How to build your own project</a></li>
+<li><a href="#Using_Wallaroo">Using Wallaroo</a></li>
+<ul>
+<li><a href="#Parts_and_Collaborators">Parts and Collaborators</a></li>
+<li><a href="#Basics">Basics</a></li>
+<li><a href="#Loading_the_configuration_from_a_file">Loading the configuration from a file</a></li>
+<li><a href="#Defining_wallaroo_classes_in_shared_libraries">Defining wallaroo classes in shared libraries</a></li>
+</ul>
+<li><a href="#Where_to_go_from_here">Where to go from here</a></li>
+</ul>
+</ul> 
+</p>
+
+<h2><a name="Getting_Wallaroo"></a>Getting Wallaroo</h2>
+
+<p>The easiest way to get a copy of Wallaroo is to download an archive from the page
+<a href="http://sourceforge.net/projects/wallaroolib/files/" rel="nofollow">Downloads of the sourceforge page</a>.
+Wallaroo is delivered in a ZIP file for Windows users and in a compressed TAR file (.tgz) for Unix/Linux users.
+Both archives contain the same files, the only difference is that all text files in the ZIP files have line endings 
+suitable for Windows (CR-LF), while the text files in the TAR file have line endings suitable for Unix/Linux (LF only).</p>
+
+<p>Otherways, you can clone the git repository from the <a href="http://sourceforge.net/p/wallaroolib/code/" rel="nofollow">repository page</a>.</p>
+
+<h2><a name="Compiling_Wallaroo"></a>Compiling Wallaroo</h2>
+
+<p>Wallaroo library is header-only: it consists entirely of header files containing templates and inline functions,
+and require no separately-compiled library binaries or special treatment when linking. </p>
+
+<h2><a name="External_Dependencies"></a>External Dependencies</h2>
+
+<p>Wallaroo relies on some of the famous <strong>boost</strong> libraries. You can donwload the latest
+version from <a href="http://www.boost.org" rel="nofollow">here</a>, extract it wherever you want in your 
+hard disk and include its path when compiling your application that use Wallaroo. </p>
+
+<p>Since Wallaroo uses header only boost libraries, you don&#x27;t need to compile boost. </p>
+
+<p><strong>Starting from v. 0.2, if your compiler supports C++11 features, you can get rid of boost libraries
+and relies only on the new C++ standard features.</strong> </p>
+
+<h2><a name="How_to_build_the_examples"></a>How to build the examples</h2>
+
+<p>You can find some examples in the directory <i>samples</i>. Each example comes with: 
+<ul>
+<li>GNU makefile </li>
+<li>Windows nmake makefile </li>
+<li>visual studio 2008 solution file </li>
+<li>visual studio 2013 solution file </li>
+</ul>
+</p>
+
+<p>All methods require you to specify the boost library path. You can do it in the following ways. </p>
+
+<h3><a name="Make"></a>Make</h3>
+
+<pre><code class="language-cpp">
+make UCFLAGS=-I&lt;boost_path&gt;
+</code></pre>
+
+<p>example: </p>
+
+<pre><code class="language-cpp">
+make UCFLAGS=-I/opt/boost_1_50_0/
+</code></pre>
+
+<h3><a name="Visual_Studio"></a>Visual Studio</h3>
+
+<p>You must set the environment variable <tt>BOOST</tt>. </p>
+
+<h2><a name="How_to_build_your_own_project"></a>How to build your own project</h2>
+
+<p>To build your own project, the compiler needs to know the include path of the wallaroo libraries. </p>
+
+<p>If your compiler is not C++0x compliant (or if you plan to use XmlConfiguration<a href="/p/wallaroo/w/edit/XmlConfiguration">?</a> or JsonConfiguration<a href="/p/wallaroo/w/edit/JsonConfiguration">?</a> classes), you should also provide the boost path. </p>
+
+<p>Fore example, if you use gcc, you can use the following syntax (with boost): </p>
+
+<pre><code class="language-cpp">
+g++ -Wall -I&lt;boost_path&gt; -I&lt;wallaroo_path&gt; *.cpp -o &lt;app_exe&gt;
+</code></pre>
+
+<p>or (without boost): </p>
+
+<pre><code class="language-cpp">
+g++ -Wall -std=c++0x -I&lt;wallaroo_path&gt; *.cpp -o &lt;app_exe&gt;
+</code></pre>
+
+<h2><a name="Using_Wallaroo"></a>Using Wallaroo</h2>
+
+<p>Using Wallaroo you will be able to separate the setup phase (object building and wiring) from the logic of your classes. In addition, you will be able to change the class of your objects without rebuilding anything: in this way you can change the behaviour of your application, or perform mock testing using the same executable. </p>
+
+<p>With Wallaroo you will be able to focus on the logic of your classes, without worrying about the wiring phase. </p>
+
+<p>This mechanism is called <strong>Dependency Injection</strong>. Someone calls it <strong>Inversion of Control</strong>, 
+but actually that has a broader meaning (see <a href="http://martinfowler.com/articles/injection.html" rel="nofollow">here</a>). </p>
+
+<h3><a name="Parts_and_Collaborators"></a>Parts and Collaborators</h3>
+
+<p>The syntax of Wallaroo is based on the catalog metaphor. The objects you build and link together are &quot;parts&quot;, that use &quot;collaborators&quot;. 
+You can add a dependency from a part to another by linking a collaborator of the first to the second. </p>
+
+<h3><a name="Basics"></a>Basics</h3>
+
+<p>To be instantiable by <strong>wallaroo</strong>, a class must derive from <tt>wallaroo::Part</tt>. 
+So, to make a class <tt>Car</tt> instantiable by <strong>wallaroo</strong>, you must declare it in an header file in this way: </p>
+
+<pre><code class="language-cpp">
+
+#include &quot;wallaroo/registered.h&quot;
+
+using namespace wallaroo;
+
+class Car : public Part
+{
+public:
+    Car( const string&amp; color );
+    // other methods declaration here
+    ...
+};
+
+</code></pre>
+
+<p>and you must define it in the implementation file in this way: </p>
+
+<pre><code class="language-cpp">
+
+WALLAROO_REGISTER( Car, string )
+
+Car::Car( const string&amp; color )
+{
+...
+}
+
+// other methods definition here
+...
+
+</code></pre>
+
+<p>The parameter <tt>string</tt> you can see inside the clause <tt>WALLAROO_REGISTER</tt> is the parameter type of the <tt>Car</tt> constructor. Wallaroo can manage constructors having up to 2 parameters (see wallaroo::Attribute for a way to overcome this limit). </p><p>The previous declaration and definition, allow you to create instances of <tt>Car</tt> in this way: </p>
+
+<pre><code class="language-cpp">
+
+#include &quot;wallaroo/catalog.h&quot;
+
+using namespace wallaroo;
+
+...
+Catalog catalog; // this is the container of your objects
+
+// populate the catalog with some objects:
+catalog.Create( &quot;ferrari_f430&quot;, &quot;Car&quot;, string( &quot;red&quot; ) );
+catalog.Create( &quot;maserati_granturismo&quot;, &quot;Car&quot;, string( &quot;black&quot; ) );
+...
+
+</code></pre>
+
+<p>The methods used have the following signature: </p>
+
+<pre><code class="language-cpp">
+
+template&lt; class P1 , class P2 &gt;
+void Catalog::Create( const std::string &amp;id, const std::string &amp;className, const P1 &amp;p1, const P2 &amp;p2 )
+ 
+template&lt; class P &gt;
+void Catalog::Create( const std::string &amp;id, const std::string &amp;className, const P &amp;p )
+ 
+void Catalog::Create( const std::string &amp;id, const std::string &amp;className )
+
+</code></pre>
+
+<p>The first parameter is the name of the instance you&#x27;re going to create, the second is the name of its class and the (optional) others parameters are the parameters you want to pass to the constructor of the object. </p><p>After filling the catalog, you can get a pointer to an object in this way: </p><pre class="prettyprint">shared_ptr&lt; Car &gt; maserati = catalog[ &quot;maserati_granturismo&quot; ];</pre><p>As you can see, the catalog returns a shared pointer. </p><p>So far so good. Now, to do useful work, your objects need to talk to each other. For example, class <tt>Car</tt> may need to invoke <tt>Engine</tt> methods. </p><p>With this code you say that class <tt>Car</tt> has a &quot;pointer&quot; to reach an object of class <tt>Engine</tt>: </p>
+
+<pre><code class="language-cpp">
+
+class Car : public Part
+{
+...
+private:
+    Collaborator&lt; Engine &gt; engine;
+...
+};</pre><p>Please note that by deriving <tt>Car</tt> from <tt>Part</tt> you make it possible associate a specific instance of class <tt>Engine</tt> to the member <tt>engine</tt> at run-time. </p><p>In the <tt>Car</tt> constructor, you must specify that <tt>Car</tt> has an <tt>engine</tt> <tt>Collaborator</tt> named <tt>mainEngine</tt>: </p><pre class="prettyprint">Car::Car( const std::string&amp; color ) :
+    engine( &quot;mainEngine&quot;, RegistrationToken() )
+{
+...
+}
+
+</code></pre>
+
+<p>Inside the <tt>Car</tt> implementation you can use it as a standard pointer: </p>
+
+<pre><code class="language-cpp">
+
+void Car::Start()
+{
+    engine -&gt; SwitchOn();
+}
+</code></pre>
+
+<p>Just remember that <tt>Collaborator&lt; Engine &gt;</tt> is really a <tt>weak_ptr</tt>:
+if in the meantime someone deleted the pointed object, when you try to use it you will get
+a <tt>Wallaroo::DeletedPartError</tt> exception. </p>
+
+<p>Please note that you can have a collaborator container in your classes, by using the syntax: </p>
+
+<pre><code class="language-cpp">
+Collaborator&lt; Book, collection &gt; library;
+</code></pre>
+
+<p>by default, in this case wallaroo will use std::vector. However, you can specify another std container in this way: </p>
+
+<pre><code class="language-cpp">
+Collaborator&lt; Book, collection, std::list &gt; library;
+</code></pre>
+
+<p>You can also provide constraints about a collaborator, i.e. you can specify if a collaborator is optional,
+mandatory (default) or its range (for a collection collaborator): </p>
+
+<pre><code class="language-cpp">
+
+class Car : public Part
+{
+    ...
+private:
+    Collaborator&lt; Engine &gt; engine; // one instance of Engine
+    Collaborator&lt; AirConditioning, optional &gt; airConditioning; // zero or one instance of airConditioning
+    Collaborator&lt; Airbag, collection &gt; airbags; // an indeterminate number of airbags (std::vector by default)
+    Collaborator&lt; Speaker, collection, std::list &gt; speakers; // an indeterminate number of speaker in a std::list
+    Collaborator&lt; Seat, bounded_collection&lt; 2, 6 &gt; &gt; seats; // from 2 to 6 instances of seats
+    ...
+};
+
+</code></pre>
+
+<p>So far so good. But how can you link <tt>engine</tt> to a previously created object? With this code: </p>
+
+<pre><code class="language-cpp">
+use( catalog[ &quot;f136e&quot; ] ).as( &quot;mainEngine&quot; ).of( catalog[ &quot;ferrari_f430&quot; ] ); // this means ferrari_f430.engine=f136e
+</code></pre>
+
+<p>In this way you assigned the object <tt>f136e</tt> to the role <tt>engine</tt> of the object <tt>ferrari_f430</tt>.
+This wiring operation can be done in the main, where you set up all your application, or wherever you like in your code,
+providing you have access to <tt>catalog</tt>. </p><p>If your application uses a unique catalog,
+wallaroo provides the following syntax to avoid you some typing: </p>
+
+<pre><code class="language-cpp">
+
+Catalog myCatalog;
+...
+wallaroo_within( myCatalog )
+{
+    use( &quot;f136e&quot; ).as( &quot;engine&quot; ).of( &quot;ferrari_f430&quot; );
+    use( &quot;m139p&quot; ).as( &quot;engine&quot; ).of( &quot;maserati_granturismo&quot; );
+}
+
+</code></pre>
+
+<p>this is equivalent to: </p>
+
+<pre><code class="language-cpp">
+
+Catalog myCatalog;
+...
+use( myCatalog[ &quot;f136e&quot; ] ).as( &quot;engine&quot; ).of( myCatalog[ &quot;ferrari_f430&quot; ] );
+use( myCatalog[ &quot;m139p&quot; ] ).as( &quot;engine&quot; ).of( myCatalog[ &quot;maserati_granturismo&quot; ] );
+
+</code></pre>
+
+<p>the latter code is useful when your objects are stored in multiple catalogs. </p><p>After performing the wiring, you can check the constraints by using <tt>Catalog::IsWiringOk()</tt> (that returns a bool) or <tt>Catalog::CheckWiring()</tt> (that throws an exception). </p>
+
+<h3><a name="Loading_the_configuration_from_a_file"></a>Loading the configuration from a file</h3>
+
+<p>By using strings, both creation and wiring information can be loaded from a configuration file or external DB. </p>
+
+<p>You can build your own mechanism to load a spec from a file and fill a <tt>wallaroo::Catalog</tt> 
+with the objects built and configured or you can use the <tt>wallaroo::XmlConfiguration</tt> or 
+<tt>wallaroo::JsonConfiguration</tt> classes, that let you fill a catalog loading respectively an xml or json 
+file (the syntax is explained <a href="/p/wallaroo/wiki/WiringFiles">here</a>). </p>
+
+<p>This is the content of the xml file: </p>
+
+<pre><code class="language-xml">
+
+&lt;wallaroo&gt;
+
+  &lt;parts&gt;
+
+    &lt;part&gt;
+      &lt;name&gt;ferrari_f430&lt;/name&gt;
+      &lt;class&gt;Car&lt;/class&gt;
+      &lt;parameter1&gt;
+        &lt;type&gt;string&lt;/type&gt;
+        &lt;value&gt;red&lt;/value&gt;
+      &lt;/parameter1&gt;
+    &lt;/part&gt;
+
+    &lt;part&gt;
+      &lt;name&gt;maserati_granturismo&lt;/name&gt;
+      &lt;class&gt;Car&lt;/class&gt;
+      &lt;parameter1&gt;
+        &lt;type&gt;string&lt;/type&gt;
+        &lt;value&gt;black&lt;/value&gt;
+      &lt;/parameter1&gt;
+    &lt;/part&gt;
+
+    &lt;part&gt;
+      &lt;name&gt;m139p&lt;/name&gt;
+      &lt;class&gt;Engine&lt;/class&gt;
+    &lt;/part&gt;
+
+    &lt;part&gt;
+      &lt;name&gt;f136e&lt;/name&gt;
+      &lt;class&gt;Engine&lt;/class&gt;
+    &lt;/part&gt;
+
+  &lt;/parts&gt;
+
+  &lt;wiring&gt;
+
+    &lt;wire&gt;
+      &lt;source&gt;ferrari_f430&lt;/source&gt;
+      &lt;dest&gt;f136e&lt;/dest&gt;
+      &lt;collaborator&gt;mainEngine&lt;/collaborator&gt;
+    &lt;/wire&gt;
+
+    &lt;wire&gt;
+      &lt;source&gt;maserati_granturismo&lt;/source&gt;
+      &lt;dest&gt;m139p&lt;/dest&gt;
+      &lt;collaborator&gt;mainEngine&lt;/collaborator&gt;
+    &lt;/wire&gt;
+
+  &lt;/wiring&gt;
+
+&lt;/wallaroo&gt;
+
+</code></pre>
+
+<p>This is the content of the json file: </p>
+
+<pre><code class="language-json">
+
+{
+  &quot;wallaroo&quot;:
+  {
+
+    &quot;parts&quot;:
+    [
+      {
+        &quot;name&quot;: &quot;ferrari_f430&quot;,
+        &quot;class&quot;: &quot;Car&quot;,
+        &quot;parameter1&quot;:
+        {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;value&quot;: &quot;red&quot;
+        }
+      },
+
+      {
+        &quot;name&quot;: &quot;maserati_granturismo&quot;,
+        &quot;class&quot;: &quot;Car&quot;,
+        &quot;parameter1&quot;:
+        {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;value&quot;: &quot;black&quot;
+        }
+      },
+
+      {
+        &quot;name&quot;: &quot;m139p&quot;,
+        &quot;class&quot;: &quot;Engine&quot;
+      },
+
+      {
+        &quot;name&quot;: &quot;f136e&quot;,
+        &quot;class&quot;: &quot;Engine&quot;
+      }
+
+    ],
+
+    &quot;wiring&quot;:
+    [
+
+      {
+        &quot;source&quot;: &quot;ferrari_f430&quot;,
+        &quot;dest&quot;: &quot;f136e&quot;,
+        &quot;collaborator&quot;: &quot;mainEngine&quot;
+      },
+
+      {
+        &quot;source&quot;: &quot;maserati_granturismo&quot;,
+        &quot;dest&quot;: &quot;m139p&quot;,
+        &quot;collaborator&quot;: &quot;mainEngine&quot;
+      }
+
+    ]
+  }
+}
+
+</code></pre>
+
+<p>So, instead of populating manually the catalog, you can do it by loading a xml file: </p>
+
+<pre><code class="language-cpp">
+
+Catalog catalog;
+XmlConfiguration file( &quot;wiring.xml&quot; );
+file.Fill( catalog );
+
+</code></pre>
+
+<p>or, a json file: </p>
+
+<p>So, instead of populating manually the catalog, you can do it by loading a xml file: </p>
+
+<pre><code class="language-cpp">
+
+Catalog catalog;
+JsonConfiguration file( &quot;wiring.json&quot; );
+file.Fill( catalog );
+
+</code></pre>
+
+<h3><a name="Defining_wallaroo_classes_in_shared_libraries"></a>Defining wallaroo classes in shared libraries</h3>
+
+<p>For shake of extendibility you can decide to put your class definitions in shared libraries  to get simple plugin mechanism. </p>
+
+<p>The code of your class will remain the same, but you must compile it in a shared library (.dll on windows or .so on unix-like os).
+You can put declaration and definition in a implementation file: </p>
+
+<pre><code class="language-cpp">
+
+#include &quot;wallaroo/dynamic_lib.h&quot; // once per library
+#include &quot;wallaroo/dyn_registered.h&quot; // once per translation unit
+
+using namespace wallaroo;
+
+class Car : public Part
+{
+public:
+    Car();
+    // other methods declaration here
+    ...
+};
+
+WALLAROO_DYNLIB_REGISTER( Car )
+
+Car::Car()
+{
+...
+}
+
+// other methods definition here
+...
+
+</code></pre>
+
+<p>Please note that in this case you use <tt>WALLAROO_DYNLIB_REGISTER</tt> instead of <tt>WALLAROO_REGISTER</tt>.
+You must include &quot;dynamic_lib.h&quot; only once per library and &quot;dyn_registered.h&quot;
+in every translation unit where you use <tt>WALLAROO_DYNLIB_REGISTER</tt>. </p>
+
+<p>The current version of wallaroo only support the definition of classes with zero-parameters constructor in shared libraries. </p>
+
+<p>To load the classes definition, you must use the static method <tt>Plugin::Load()</tt> at the beginning of your application: </p>
+
+<pre><code class="language-cpp">
+
+#include &quot;wallaroo/catalog.h&quot;
+
+using namespace wallaroo;
+
+...
+// load classes in shared libraries:
+Plugin::Load( &quot;car&quot; + Plugin::Suffix() ); // Plugin::Suffix() expands to .dll or .so according to the OS
+...
+Catalog catalog; // this is the container of your objects
+
+// populate the catalog with some objects:
+catalog.Create( &quot;ferrari_f430&quot;, &quot;Car&quot; );
+catalog.Create( &quot;maserati_granturismo&quot;, &quot;Car&quot; );
+...
+
+</code></pre>
+
+<p>Alternatively, you can specify the shared libraries to load in the configuration file: </p>
+
+<pre><code class="language-xml">
+
+&lt;wallaroo&gt;
+
+  &lt;plugins&gt;
+    &lt;shared&gt;car&lt;/shared&gt;
+    &lt;shared&gt;engine&lt;/shared&gt;
+  &lt;/plugins&gt;
+
+  &lt;parts&gt;
+    ...
+  &lt;/parts&gt;
+
+  &lt;wiring&gt;
+    ...
+  &lt;/wiring&gt;
+
+&lt;/wallaroo&gt;
+
+</code></pre>
+
+<p>or </p>
+
+<pre><code class="language-json">
+
+{
+  &quot;wallaroo&quot;:
+  {
+
+    &quot;plugins&quot;:
+    {
+      &quot;shared&quot;: &quot;car&quot;,
+      &quot;shared&quot;: &quot;engine&quot;
+    },
+
+    &quot;parts&quot;:
+    [
+      ...
+    ],
+
+    &quot;wiring&quot;:
+    [
+      ...
+    ]
+  }
+}
+
+</code></pre>
+
+<p>then, in the main application, you must specify to load the shared libraries specified in the configuration file: </p>
+
+<pre><code class="language-cpp">
+
+#include &quot;wallaroo/catalog.h&quot;
+#include &quot;wallaroo/xmlconfiguration.h&quot;
+
+using namespace wallaroo;
+
+...
+XmlConfiguration file( &quot;configuration.xml&quot; );
+// load classes in shared libraries:
+file.LoadPlugins();
+...
+
+</code></pre>
+
+<h2><a name="Where_to_go_from_here"></a>Where to go from here<a href="#Where_to_go_from_here" class="section_anchor"></a></h2><p>This page has given you a general overview of <strong>Wallaroo</strong>. </p><p>You can obtain more information in the following places: </p><ul><li><a href="/p/wallaroo/wiki/Tutorial">Tutorial</a> </li><li><a href="http://doc.wallaroo.googlecode.com/git/index.html" rel="nofollow">API documentation</a> </li><li><a href="/p/wallaroo/wiki/FAQ">FAQ</a> </li><li><a href="/p/wallaroo/wiki/WiringFiles">Wiring file description</a> and <a href="/p/wallaroo/wiki/XmlSchema">wallaroo XML file schema</a> </li><li>The samples contained in the library </li><li>and, in general, you can refer to the <a href="https://code.google.com/p/wallaroo/wiki/TableOfContents" rel="nofollow">documentation index page</a>. </li></ul>
