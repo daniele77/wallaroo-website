@@ -1,0 +1,145 @@
+---
+title: 5 Minutes Tour
+---
+<h1>5 Minutes Tour (for the impatients)</h1>
+
+<p>If you&#x27;re the TL;DR kind, you can read only this page.</p>
+
+<p>Download wallaroo <a href="http://sourceforge.net/projects/wallaroolib/files/" rel="nofollow">here</a>.</p>
+
+<p>If your compiler does not support C++11, download 
+<a href="http://www.boost.org" rel="nofollow">boost libraries</a>.</p>
+
+<p>Your classes should derive from <tt>wallaroo::Part</tt> and be registered in the implementation file
+with the macro <tt>WALLAROO_REGISTER</tt>. E.g.:</p>
+
+<pre><code class="language-cpp">
+#include "wallaroo/registered.h"
+
+using namespace wallaroo;
+
+class Car : public Part
+{
+public:
+    Car( const string& color );
+    // other methods declaration here
+    ...
+};
+</code></pre>
+
+<p>and you must define it in the implementation file in this way:</p>
+
+<pre><code class="language-cpp">
+WALLAROO_REGISTER( Car, string )
+
+Car::Car( const string& color )
+{
+...
+}
+
+// other methods definition here
+...
+</code></pre>
+
+<p>If your class depends on other objects, you must add wallaroo::Collaborators to it:</p>
+
+<pre><code class="language-cpp">
+class Car : public Part
+{
+    ...
+private:
+    Collaborator< Engine > engine; // one instance of Engine
+    Collaborator< AirConditioning, optional > airConditioning; // zero or one instance of airConditioning
+    Collaborator< Airbag, collection > airbags; // an unspecified number of airbags (std::vector by default)
+    Collaborator< Speaker, collection, std::list > speakers; // an unspecified number of speaker in a std::list
+    Collaborator< Seat, bounded_collection< 2, 6 > > seats; // from 2 to 6 instances of seats
+    ...
+};
+</code></pre>
+
+<p>and gives them names:</p>
+
+<pre><code class="language-cpp">
+Car::Car :
+    engine( "engine", RegistrationToken() ),
+    airConditioning( "airConditioning", RegistrationToken() ),
+    airbags( "airbags", RegistrationToken() ),
+    speakers( "speakers", RegistrationToken() ),
+    seats( "seats", RegistrationToken() )
+{
+    ...
+}
+</code></pre>
+
+<p>You can create instances of your registered classes and store them inside a catalog:</p>
+
+<pre><code class="language-cpp">
+#include "wallaroo/catalog.h"
+
+using namespace wallaroo;
+
+...
+Catalog catalog; // this is the container of your objects
+
+// populate the catalog with some objects:
+catalog.Create( "ferrari_f430", "Car", string( "red" ) );
+catalog.Create( "maserati_granturismo", "Car", string( "black" ) );
+catalog.Create( "frontLeftSeat", "Seat" );
+catalog.Create( "frontRightSeat", "Seat" );
+...
+</code></pre>
+
+<p>You can link together your objects in this way:</p>
+
+<pre><code class="language-cpp">
+Catalog myCatalog;
+...
+wallaroo_within( myCatalog )
+{
+    use( "f136e" ).as( "engine" ).of( "ferrari_f430" );
+    use( "m139p" ).as( "engine" ).of( "maserati_granturismo" );
+}
+</code></pre>
+
+<p>this is equivalent to:</p>
+
+<pre><code class="language-cpp">
+Catalog myCatalog;
+...
+use( myCatalog[ "f136e" ] ).as( "engine" ).of( myCatalog[ "ferrari_f430" ] );
+use( myCatalog[ "m139p" ] ).as( "engine" ).of( myCatalog[ "maserati_granturismo" ] );
+</code></pre>
+
+<p>the latter code is useful when your objects are stored in multiple catalogs.</p>
+
+<p>To check whether the wiring satisfies the constraints, 
+you can use <tt>Catalog::IsWiringOk()</tt> (returns a bool) or 
+<tt>Catalog::CheckWiring()</tt> (throws an exception).</p>
+
+<p>Finally, you can get a pointer to an object by using the operator [] of Catalog:</p>
+
+<pre><code class="language-cpp">
+shared_ptr< Car > maserati = catalog[ "maserati_granturismo" ];
+</code></pre>
+
+<p>If you want, you can load the objects and/or the wiring from xml or json configuration files,
+by using <tt>XmlConfiguration</tt> and <tt>JsonConfiguration</tt>:</p>
+
+<pre><code class="language-cpp">
+Catalog catalog;
+XmlConfiguration file( "wiring.xml" );
+file.Fill( catalog );
+</code></pre>
+
+<p>You can also define your classes in shared libraries (.dll or .so).
+In that case, you must use the macro <tt>WALLAROO_DYNLIB_REGISTER</tt>
+instead of <tt>WALLAROO_REGISTER</tt> (every library can contain multiple
+class definitions and thus multiple <tt>WALLAROO_DYNLIB_REGISTER</tt> declarations).
+Before creating instances of a class defined in a shared library,
+you must load it using the static method <tt>Plugin::Load</tt>.</p>
+
+<p>You can specify the shared libraries to load in the xml or json configuration files,
+by using the tag plugin and then read them with the method <tt>XmlConfiguration::LoadPlugins</tt>
+or <tt>JsonConfiguration::LoadPlugins</tt>.</p>
+
+<p>If you want a more detailed tour, you can read the page <a href="gettingstarted.html">Getting Started</a>.</p>
