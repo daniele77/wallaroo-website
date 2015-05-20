@@ -11,3 +11,10 @@ You need the gem:
 	
 To get syntax highlighting, you need the gem:
 	gem install coderay
+    
+Compile:
+    nanoc
+Deploy (staging):
+    nanoc deploy --target staging
+Deploy (public):
+    nanoc deploy --target public
