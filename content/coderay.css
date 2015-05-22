@@ -1,11 +1,16 @@
+
+
 .CodeRay {
+  padding: 0.5em;
+  overflow: auto;
+  font-family: Monaco, 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Lucida Console', monospace;
+
   background-color: hsl(0,0%,95%);
   border: 1px solid silver;
   color: black;
-  
+
   font-size: 9pt;  
   margin: 1pc 4% 0pc 4%;
-  padding: 0.5pc 0.5pc 0.5pc 0.5pc;
 }
 .CodeRay pre {
   margin: 0px;
