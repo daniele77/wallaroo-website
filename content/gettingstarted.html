@@ -88,7 +88,7 @@ make UCFLAGS=-I/opt/boost_1_50_0/
 
 <p>To build your own project, the compiler needs to know the include path of the wallaroo libraries. </p>
 
-<p>If your compiler is not C++0x compliant (or if you plan to use XmlConfiguration<a href="/p/wallaroo/w/edit/XmlConfiguration">?</a> or JsonConfiguration<a href="/p/wallaroo/w/edit/JsonConfiguration">?</a> classes), you should also provide the boost path. </p>
+<p>If your compiler is not C++11 compliant (or if you plan to use XmlConfiguration<a href="/p/wallaroo/w/edit/XmlConfiguration">?</a> or JsonConfiguration<a href="/p/wallaroo/w/edit/JsonConfiguration">?</a> classes), you should also provide the boost path. </p>
 
 <p>Fore example, if you use gcc, you can use the following syntax (with boost): </p>
 
@@ -185,7 +185,18 @@ void Catalog::Create( const std::string &amp;id, const std::string &amp;classNam
 
 </code></pre>
 
-<p>The first parameter is the name of the instance you&#x27;re going to create, the second is the name of its class and the (optional) others parameters are the parameters you want to pass to the constructor of the object. </p><p>After filling the catalog, you can get a pointer to an object in this way: </p><pre class="prettyprint">shared_ptr&lt; Car &gt; maserati = catalog[ &quot;maserati_granturismo&quot; ];</pre><p>As you can see, the catalog returns a shared pointer. </p><p>So far so good. Now, to do useful work, your objects need to talk to each other. For example, class <tt>Car</tt> may need to invoke <tt>Engine</tt> methods. </p><p>With this code you say that class <tt>Car</tt> has a &quot;pointer&quot; to reach an object of class <tt>Engine</tt>: </p>
+<p>The first parameter is the name of the instance you&#x27;re going to create, the second is the name of its class and the (optional) others parameters are the parameters you want to pass to the constructor of the object. </p><p>After filling the catalog, you can get a pointer to an object in this way:</p>
+
+<pre><code class="language-cpp">
+shared_ptr&lt; Car &gt; maserati = catalog[ &quot;maserati_granturismo&quot; ];
+</code></pre>
+
+<p>As you can see, the catalog returns a shared pointer. </p>
+
+<p>So far so good. Now, to do useful work, your objects need to talk to each other. 
+For example, class <tt>Car</tt> may need to invoke <tt>Engine</tt> methods. </p>
+
+<p>With this code you say that class <tt>Car</tt> has a &quot;pointer&quot; to reach an object of class <tt>Engine</tt>: </p>
 
 <pre><code class="language-cpp">
 
@@ -195,7 +206,19 @@ class Car : public Part
 private:
     Collaborator&lt; Engine &gt; engine;
 ...
-};</pre><p>Please note that by deriving <tt>Car</tt> from <tt>Part</tt> you make it possible associate a specific instance of class <tt>Engine</tt> to the member <tt>engine</tt> at run-time. </p><p>In the <tt>Car</tt> constructor, you must specify that <tt>Car</tt> has an <tt>engine</tt> <tt>Collaborator</tt> named <tt>mainEngine</tt>: </p><pre class="prettyprint">Car::Car( const std::string&amp; color ) :
+};
+
+</code></pre>
+
+<p>Please note that by deriving <tt>Car</tt> from <tt>Part</tt> you make it possible associate a specific instance 
+of class <tt>Engine</tt> to the member <tt>engine</tt> at run-time. </p>
+
+<p>In the <tt>Car</tt> constructor, you must specify that <tt>Car</tt> has an <tt>engine</tt> <tt>Collaborator</tt> 
+named <tt>mainEngine</tt>: </p>
+
+<pre><code class="language-cpp">
+
+Car::Car( const std::string&amp; color ) :
     engine( &quot;mainEngine&quot;, RegistrationToken() )
 {
 ...
@@ -565,4 +588,15 @@ file.LoadPlugins();
 
 </code></pre>
 
-<h2><a name="Where_to_go_from_here"></a>Where to go from here<a href="#Where_to_go_from_here" class="section_anchor"></a></h2><p>This page has given you a general overview of <strong>Wallaroo</strong>. </p><p>You can obtain more information in the following places: </p><ul><li><a href="/p/wallaroo/wiki/Tutorial">Tutorial</a> </li><li><a href="http://doc.wallaroo.googlecode.com/git/index.html" rel="nofollow">API documentation</a> </li><li><a href="/p/wallaroo/wiki/FAQ">FAQ</a> </li><li><a href="/p/wallaroo/wiki/WiringFiles">Wiring file description</a> and <a href="/p/wallaroo/wiki/XmlSchema">wallaroo XML file schema</a> </li><li>The samples contained in the library </li><li>and, in general, you can refer to the <a href="https://code.google.com/p/wallaroo/wiki/TableOfContents" rel="nofollow">documentation index page</a>. </li></ul>
+<h2><a name="Where_to_go_from_here"></a>Where to go from here</h2>
+
+<p>This page has given you a general overview of <strong>Wallaroo</strong>. </p>
+
+<p>You can obtain more information in the following places: </p>
+<ul>
+<li><a href="tutorial.html">Tutorial</a> </li>
+<li><a href="doxy/index.html">API documentation</a> </li>
+<li><a href="faq.html">FAQ</a> </li>
+<li><a href="wiringfiles.html">Wiring file description</a> and <a href="xmlschema.html">wallaroo XML file schema</a> </li>
+<li>The samples contained in the library </li>
+</ul>

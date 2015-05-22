@@ -1,0 +1,213 @@
+---
+title: Tutorial
+---
+<h1>Tutorial</h1>
+
+<p>From <a href="http://en.wikipedia.org/wiki/Dependency_injection" rel="nofollow">wikipedia</a>: </p><blockquote>The primary purpose of the dependency injection pattern is to allow selection among multiple implementations of a given dependency interface at runtime, or via configuration files, instead of at compile time. 
+The pattern is particularly useful for providing &quot;mock&quot; test implementations of complex components when testing; but is often used for locating plugin components, or locating and initializing software services. 
+</blockquote><h2><a name="Motivation"></a>Motivation<a href="#Motivation" class="section_anchor"></a></h2><p>Let&#x27;s say you&#x27;re coding a beautiful application that <a href="http://www.carlopescio.com/2012/03/life-without-controller-case-1.html" rel="nofollow">controls a sump pump</a>: </p><p>After a careful design phase (see <a href="http://www.carlopescio.com/2012/03/life-without-controller-case-1.html" rel="nofollow">this blog post</a> to have an accurate description of this phase), you come up with a <tt>SumpPump</tt> class: </p><pre class="prettyprint">class SumpPump
+{
+public:
+  ...
+  void Drain()
+  {
+    if ( probe -&gt; MustDrain() )
+      engine -&gt; On();
+    else
+      engine -&gt; Off();
+  }
+private:
+  PumpEngine* engine;
+  SumpProbe* probe;
+};</pre><p>Let&#x27;s say you now have a new requirement: <blockquote>to prevent explosions, the pump must not be operated when methane is above a certain level. 
+</blockquote></p><p>No problem: you&#x27;re using OO. You can subclass <tt>PumpEngine</tt> and change the code this way: </p><pre class="prettyprint">class SafeEngine : public PumpEngine
+{
+public:
+  virtual void On()
+  {
+    if ( ! sensor -&gt; IsCritical() )
+      PumpEngine::On();
+  }
+private:
+  GasSensor* sensor;
+};
+
+
+class SumpPump
+{
+public:
+  void Drain()
+  {
+    if ( probe -&gt; MustDrain() )
+      engine -&gt; On();
+    else
+      engine -&gt; Off();
+  }
+private:
+  PumpEngine* engine;
+  SumpProbe* probe;
+};</pre><p>However, somewhere in the code, you must tell the class <tt>SumpPump</tt> to create an instance of <tt>SafeEngine</tt> instead of <tt>PumpEngine</tt>. There are two solutions: <ul><li>you can create the right instance in <tt>SumpPump</tt> constructor </li><li>you can pass the instance of <tt>SafeEngine</tt> as parameter in  <tt>SumpPump</tt> constructor </li></ul>The two alternatives are shown below: </p><pre class="prettyprint">class SumpPump
+{
+public:
+  SumpPump( GasSensor* sensor )
+  {
+    // engine = new PumpEngine();
+    engine = new SafeEngine( sensor );
+    probe = new SumpProbe();
+  }
+...
+};</pre><pre class="prettyprint">class SumpPump
+{
+public:
+  SumpPump( PumpEngine* pe, SumpProbe* sp ) :
+    engine( pe ),
+    probe( sp )
+  {
+  }
+...
+};</pre><p>Both the solutions have problems. </p><p>In the first, you have to modify the code of <tt>SumpPump</tt> if you want to use a different engine. Besides, you need to provide the <tt>SafeEngine</tt> constructor parameters to <tt>SumpPump</tt> constructor (and so, you have to modify also the code that creates SumpPump<a href="/p/wallaroo/w/edit/SumpPump">?</a> instances). </p><p>The second solution is better: you don&#x27;t change <tt>SumpPump</tt> code, yet you can&#x27;t swap the behaviour without recompiling your application. </p><h2><a name="Enter_Wallaroo"></a>Enter Wallaroo<a href="#Enter_Wallaroo" class="section_anchor"></a></h2><p>Instead, I really would like to be able to change the type of the classes withouth modifying them and withouth propagate dependencies in the whole class tree. </p><p>Let&#x27;s say I want the freedom to choose late the concrete classes of <tt>probe</tt> and <tt>engine</tt> dependencies in <tt>SumpPump</tt>. </p><p>Using Wallaroo we can write the classes this way: </p><pre class="prettyprint">// sumppump.h
+
+class SumpPump : public Part
+{
+public:
+  SumpPump();
+  virtual void Drain();
+private:
+  Collaborator&lt; SumpProbe &gt; probe;
+  Collaborator&lt; PumpEngine &gt; engine;
+};</pre><p>and </p><pre class="prettyprint">// sumppump.cpp
+
+WALLAROO_REGISTER( SumpPump )
+
+SumpPump::SumpPump() :
+  probe( &quot;probe&quot;, RegistrationToken() ),
+  engine( &quot;engine&quot;, RegistrationToken() )
+{
+}
+
+void SumpPump::Drain()
+{
+    if ( probe -&gt; MustDrain() ) engine -&gt; On();
+    else engine -&gt; Off();
+}</pre><p>Then, let&#x27;s say I want to use <tt>TwoLevelSumpProbe</tt> and <tt>SafeEngine</tt> as concrete classes of <tt>probe</tt> and <tt>engine</tt>, respectively. </p><p>Now, the wiring becomes a piece of cake: it can be performed with a DSL in the main (or wherever you want): </p><pre class="prettyprint">Catalog catalog;
+
+catalog.Create( &quot;twoLevelsProbe&quot;, &quot;TwoLevelSumpProbe&quot; );
+catalog.Create( &quot;safeEngine&quot;, &quot;SafeEngine&quot; );
+catalog.Create( &quot;pump&quot;, &quot;SumpPump&quot; );
+
+wallaroo_within( catalog )
+{
+    use( &quot;twoLevelsProbe&quot; ).as( &quot;probe&quot; ).of( &quot;pump&quot; );
+    use( &quot;safeEngine&quot; ).as( &quot;engine&quot; ).of( &quot;pump&quot; );
+}</pre><p>Otherwise, you can decide to get the objects and perform the wiring loading a configuration file. </p><pre class="prettyprint">Catalog catalog;
+XmlConfiguration file( &quot;wiring.xml&quot; );
+file.Fill( catalog );
+catalog.CheckWiring(); // throws a WiringError exception if any collaborator is missed</pre><p>the <tt>xml</tt> file should have this syntax (see <a href="/p/wallaroo/wiki/WiringFiles">here</a> for a detailed description): </p><pre class="prettyprint">&lt;wallaroo&gt;
+
+  &lt;parts&gt;
+
+    &lt;part&gt;
+      &lt;name&gt;twoLevelsProbe&lt;/name&gt;
+      &lt;class&gt;TwoLevelSumpProbe&lt;/class&gt;
+    &lt;/part&gt;
+
+    &lt;part&gt;
+      &lt;name&gt;safeEngine&lt;/name&gt;
+      &lt;class&gt;SafeEngine&lt;/class&gt;
+    &lt;/part&gt;
+
+    &lt;part&gt;
+      &lt;name&gt;pump&lt;/name&gt;
+      &lt;class&gt;SumpPump&lt;/class&gt;
+    &lt;/part&gt;
+
+  &lt;/parts&gt;
+
+  &lt;wiring&gt;
+
+    &lt;wire&gt;
+      &lt;source&gt;pump&lt;/source&gt;
+      &lt;dest&gt;twoLevelsProbe&lt;/dest&gt;
+      &lt;collaborator&gt;probe&lt;/collaborator&gt;
+    &lt;/wire&gt;
+
+    &lt;wire&gt;
+      &lt;source&gt;pump&lt;/source&gt;
+      &lt;dest&gt;safeEngine&lt;/dest&gt;
+      &lt;collaborator&gt;engine&lt;/collaborator&gt;
+    &lt;/wire&gt;
+
+  &lt;/wiring&gt;
+
+&lt;/wallaroo&gt;</pre><p>You can also decide to put your classes in shared libraries. Let&#x27;s say you wanna put <tt>SafeEngine</tt> class in a .dll or .so. You just substitute the macro <tt>WALLAROO_REGISTER</tt> with <tt>WALLAROO_DYNLIB_REGISTER</tt> in this way: </p><pre class="prettyprint">// safeengine.cpp
+
+#include &quot;pumpengine.h&quot;
+#include &quot;wallaroo/dynamic_lib.h&quot; // once per library
+#include &quot;wallaroo/dyn_registered.h&quot; // once per translation unit
+
+class SafeEngine : public PumpEngine
+{
+public:
+  virtual void On()
+  {
+    if ( ! sensor -&gt; IsCritical() )
+      PumpEngine::On();
+  }
+private:
+  Collaborator&lt; GasSensor &gt; sensor;
+};
+
+WALLAROO_DYNLIB_REGISTER( SafeEngine )
+</pre><p>Then, you should load the shared library before create your objects: </p><pre class="prettyprint">Plugin::Load( &quot;safeengine&quot; + Plugin::Suffix() ); // load classes in shared libraries.
+// Plugin::Suffix() expands to .dll or .so according to the OS
+Catalog catalog;
+XmlConfiguration file( &quot;wiring.xml&quot; );
+file.Fill( catalog );
+catalog.CheckWiring(); // throws a WiringError exception if any collaborator is missing</pre><p>The shared library can also be specified in the xml configuration file: </p><pre class="prettyprint">&lt;wallaroo&gt;
+
+  &lt;plugins&gt;
+    &lt;shared&gt;safeengine&lt;/shared&gt;
+  &lt;/plugins&gt;
+
+  &lt;parts&gt;
+
+    &lt;part&gt;
+      &lt;name&gt;twoLevelsProbe&lt;/name&gt;
+      &lt;class&gt;TwoLevelSumpProbe&lt;/class&gt;
+    &lt;/part&gt;
+
+    &lt;part&gt;
+      &lt;name&gt;safeEngine&lt;/name&gt;
+      &lt;class&gt;SafeEngine&lt;/class&gt;
+    &lt;/part&gt;
+
+    &lt;part&gt;
+      &lt;name&gt;pump&lt;/name&gt;
+      &lt;class&gt;SumpPump&lt;/class&gt;
+    &lt;/part&gt;
+
+  &lt;/parts&gt;
+
+  &lt;wiring&gt;
+
+    &lt;wire&gt;
+      &lt;source&gt;pump&lt;/source&gt;
+      &lt;dest&gt;twoLevelsProbe&lt;/dest&gt;
+      &lt;collaborator&gt;probe&lt;/collaborator&gt;
+    &lt;/wire&gt;
+
+    &lt;wire&gt;
+      &lt;source&gt;pump&lt;/source&gt;
+      &lt;dest&gt;safeEngine&lt;/dest&gt;
+      &lt;collaborator&gt;engine&lt;/collaborator&gt;
+    &lt;/wire&gt;
+
+  &lt;/wiring&gt;
+
+&lt;/wallaroo&gt;</pre><p>In this case, you should load the shared libraries in this way: </p><pre class="prettyprint">Catalog catalog;
+XmlConfiguration file( &quot;wiring.xml&quot; );
+file.LoadPlugins(); // load the shared libraries specified in the configuration file
+file.Fill( catalog );
+catalog.CheckWiring(); // throws a WiringError exception if any collaborator is missing</pre><p>Finally, you can get the entry point and start the main loop: </p><pre class="prettyprint">shared_ptr&lt; SumpPump &gt; pump = catalog[ &quot;pump&quot; ];
+while ( true )
+    pump -&gt; Drain();</pre><p>That&#x27;s all. If you want, you can have a look at the wallaroo mineplant sample to see all the details about this example. </p>
