@@ -1,0 +1,100 @@
+---
+title: Wiring File XML schema
+---
+<h1>Wiring File XML schema</h1>
+
+<p><i>XML Wallaroo Wiring File Schema.</i> </p>
+
+<pre><code class="language-xml">
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;xs:schema xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+
+
+  &lt;xs:simpleType name=&quot;paramclasstype&quot;&gt;
+    &lt;xs:restriction base=&quot;xs:string&quot;&gt;
+      &lt;xs:enumeration value=&quot;char&quot;/&gt;
+      &lt;xs:enumeration value=&quot;unsigned char&quot;/&gt;
+      &lt;xs:enumeration value=&quot;int&quot;/&gt;
+      &lt;xs:enumeration value=&quot;unsigned int&quot;/&gt;
+      &lt;xs:enumeration value=&quot;long&quot;/&gt;
+      &lt;xs:enumeration value=&quot;double&quot;/&gt;
+      &lt;xs:enumeration value=&quot;bool&quot;/&gt;
+      &lt;xs:enumeration value=&quot;string&quot;/&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+
+&lt;xs:complexType name=&quot;attributetype&quot;&gt;
+  &lt;xs:sequence&gt;
+    &lt;xs:element name=&quot;name&quot; type=&quot;xs:token&quot;/&gt;
+    &lt;xs:element name=&quot;value&quot; type=&quot;xs:string&quot;/&gt;
+  &lt;/xs:sequence&gt;
+&lt;/xs:complexType&gt;
+
+
+&lt;xs:complexType name=&quot;paramtype&quot;&gt;
+  &lt;xs:sequence&gt;
+    &lt;xs:element name=&quot;type&quot; type=&quot;paramclasstype&quot;/&gt;
+    &lt;xs:element name=&quot;value&quot; type=&quot;xs:string&quot;/&gt;
+  &lt;/xs:sequence&gt;
+&lt;/xs:complexType&gt;
+
+
+&lt;xs:element name=&quot;part&quot;&gt;
+  &lt;xs:complexType&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name=&quot;name&quot; type=&quot;xs:token&quot;/&gt;
+      &lt;xs:element name=&quot;class&quot; type=&quot;xs:token&quot;/&gt;
+      &lt;xs:element name=&quot;attribute&quot; minOccurs=&quot;0&quot; maxOccurs=&quot;unbounded&quot; type=&quot;attributetype&quot;/&gt;
+      &lt;xs:element name=&quot;parameter1&quot; minOccurs=&quot;0&quot; type=&quot;paramtype&quot;/&gt;
+      &lt;xs:element name=&quot;parameter2&quot; minOccurs=&quot;0&quot; type=&quot;paramtype&quot;/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+&lt;/xs:element&gt;
+
+
+&lt;xs:element name=&quot;wire&quot;&gt;
+  &lt;xs:complexType&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name=&quot;source&quot; type=&quot;xs:token&quot;/&gt;
+      &lt;xs:element name=&quot;dest&quot; type=&quot;xs:token&quot;/&gt;
+      &lt;xs:element name=&quot;collaborator&quot; type=&quot;xs:token&quot;/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+&lt;/xs:element&gt;
+              
+
+&lt;xs:element name=&quot;wallaroo&quot;&gt;
+  &lt;xs:complexType&gt;
+    &lt;xs:sequence&gt;
+
+      &lt;xs:element name=&quot;plugins&quot; minOccurs=&quot;0&quot;&gt;
+        &lt;xs:complexType&gt;
+          &lt;xs:sequence&gt;
+            &lt;xs:element name=&quot;shared&quot; type=&quot;xs:Name&quot; maxOccurs=&quot;unbounded&quot;/&gt;
+          &lt;/xs:sequence&gt;
+        &lt;/xs:complexType&gt;
+      &lt;/xs:element&gt;
+
+      &lt;xs:element name=&quot;parts&quot;&gt;
+        &lt;xs:complexType&gt;
+          &lt;xs:sequence&gt;
+            &lt;xs:element ref=&quot;part&quot; maxOccurs=&quot;unbounded&quot;/&gt;
+          &lt;/xs:sequence&gt;
+        &lt;/xs:complexType&gt;
+      &lt;/xs:element&gt;
+
+      &lt;xs:element name=&quot;wiring&quot; minOccurs=&quot;0&quot; maxOccurs=&quot;1&quot;&gt;
+        &lt;xs:complexType&gt;
+          &lt;xs:sequence&gt;
+            &lt;xs:element ref=&quot;wire&quot; maxOccurs=&quot;unbounded&quot;/&gt;
+          &lt;/xs:sequence&gt;
+        &lt;/xs:complexType&gt;
+      &lt;/xs:element&gt;    
+
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+&lt;/xs:element&gt;
+
+&lt;/xs:schema&gt;
+</code></pre>

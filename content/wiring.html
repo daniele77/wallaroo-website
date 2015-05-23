@@ -1,0 +1,294 @@
+---
+title: Wiring File Description
+---
+<h1><a name="Wallaroo_Wiring_Files"></a>Wallaroo Wiring Files</h1>
+
+<p>Wallaroo can load the description of your software from a configuration file, 
+in XML or JSON format. You can use the file to specify the following: 
+<ul>
+<li>which objects instantiate </li>
+<li>the concrete class of each object </li>
+<li>set the object attributes </li>
+<li>the wiring between the objects </li>
+<li>shared libraries to load </li>
+</ul>   
+However, you can use more than one configuration file, or you can decide to specify only a part of your 
+application with the configuration file. </p>
+
+<h2><a name="Loading_a_wiring_file"></a>Loading a wiring file</h2>
+
+<p>Once you have a <tt>Catalog</tt> object in your application, you can fill it by using the classes 
+<tt>XmlConfiguration</tt> or <tt>JsonConfiguration</tt>. </p>
+
+<p>To load a xml file: </p>
+
+<pre><code class="language-cpp">
+Catalog catalog;
+...
+XmlConfiguration file( &quot;wiring.xml&quot; );
+file.Fill( catalog );
+...
+catalog.CheckWiring(); // throws a WiringError exception if any collaborator is missing
+</code></pre>
+
+<p>To load a json file: </p>
+
+<pre><code class="language-cpp">
+Catalog catalog;
+...
+JsonConfiguration file( &quot;wiring.json&quot; );
+file.Fill( catalog );
+...
+catalog.CheckWiring(); // throws a WiringError exception if any collaborator is missing
+</code></pre>
+
+<p>If there are classes defined in shared libraries, you should load them by using the code: </p>
+
+<pre><code class="language-cpp">
+// create file as XmlConfiguration or JsonConfiguration class
+XmlConfiguration file( &quot;myFile.xml&quot; );
+// or JsonConfiguration file( &quot;myFile.json&quot; );
+...
+file.LoadPlugins(); // load the shared libraries specified in configuration file
+</code></pre>
+
+<h2><a name="XML_Wiring_file_syntax"></a>XML Wiring file syntax</h2>
+
+<p>The XML file is composed by three sections: 
+<ul>
+<li>the shared libraries to load (tag <tt>plugins</tt>) </li>
+<li>the object instances definition (tag <tt>parts</tt>) </li>
+<li>the objects wiring specification (tag <tt>wiring</tt>) </li>
+</ul>   
+</p>
+
+<pre><code class="language-xml">
+&lt;wallaroo&gt;
+
+  &lt;plugins&gt;
+    ...
+  &lt;/plugins&gt;
+
+  &lt;parts&gt;
+    ...
+  &lt;/parts&gt;
+
+  &lt;wiring&gt;
+    ...
+  &lt;/wiring&gt;
+
+&lt;/wallaroo&gt;
+</code></pre>
+
+<h3><a name="Shared_Libraries_Section"></a>Shared Libraries Section</h3>
+<p>If you want to load classes implemented in shared libraries you must write a section <tt>plugins</tt> 
+where you specify every shared library to load: </p>
+
+<pre><code class="language-xml">
+&lt;plugins&gt;
+  &lt;shared&gt;shared_lib_1&lt;/shared&gt;
+  &lt;shared&gt;shared_lib_2&lt;/shared&gt;
+&lt;/plugins&gt;
+</code></pre>
+
+<p>Please note that the library name does not include the file extension: wallaroo add the os specific extension 
+(.dll on windows, .so on linux). </p>
+
+<h3><a name="Parts_Section"></a>Parts Section</h3>
+
+<p>For each object you want to be created, you must write a section <tt>part</tt>, 
+where you specify the instance name (the id you will use to refer to this object) and the class 
+of the object: </p>
+
+<pre><code class="language-xml">
+&lt;part&gt;
+
+  &lt;name&gt;object_name&lt;/name&gt;
+  &lt;class&gt;class_name&lt;/class&gt;
+
+  &lt;attribute&gt; &lt;!-- optional --&gt;
+    &lt;name&gt;attribute1_name&lt;/name&gt;
+    &lt;value&gt;attribute1_value&lt;/value&gt;
+  &lt;/attribute&gt;
+  &lt;attribute&gt; &lt;!-- optional --&gt;
+    &lt;name&gt;attribute2_name&lt;/name&gt;
+    &lt;value&gt;attribute2_value&lt;/value&gt;
+  &lt;/attribute&gt;
+  ...
+
+  &lt;parameter1&gt; &lt;!-- optional --&gt;
+    &lt;type&gt;string&lt;/type&gt;
+    &lt;value&gt;parameter_value&lt;/value&gt;
+  &lt;/parameter1&gt;
+  &lt;parameter2&gt; &lt;!-- optional --&gt;
+    &lt;type&gt;int&lt;/type&gt;
+    &lt;value&gt;3&lt;/value&gt;
+  &lt;/parameter2&gt;
+
+&lt;/part&gt;
+</code></pre>
+
+<p>The parameter type currently supported are: </p>
+
+<ul>
+<li>char </li>
+<li>unsigned char </li>
+<li>int </li>
+<li>unsigned int </li>
+<li>long </li>
+<li>double </li>
+<li>bool </li>
+<li>string </li>
+</ul>
+
+<h3><a name="Wiring_Section"></a>Wiring Section</h3>
+
+<p>For each relation between the instances you created, you must write a section <tt>wire</tt>, 
+where you specify the two object you want to link (source and destination) and the name of the collaborator 
+in the source object: </p>
+
+<pre><code class="language-cpp">
+&lt;wire&gt;
+  &lt;source&gt;source_object&lt;/source&gt;
+  &lt;dest&gt;dest_object&lt;/dest&gt;
+  &lt;collaborator&gt;plut_in_source_object&lt;/collaborator&gt;
+&lt;/wire&gt;
+</code></pre>
+
+<h3><a name="Example"></a>Example</h3>
+
+<p>This is an example of a XML wiring file: </p>
+
+<pre><code class="language-xml">
+&lt;wallaroo&gt;
+
+  &lt;plugins&gt;
+    &lt;shared&gt;car&lt;/shared&gt;
+    &lt;shared&gt;engine&lt;/shared&gt;
+  &lt;/plugins&gt;
+
+  &lt;parts&gt;
+
+    &lt;part&gt;
+      &lt;name&gt;ferrari_f430&lt;/name&gt;
+      &lt;class&gt;Car&lt;/class&gt;
+      &lt;parameter1&gt;
+        &lt;type&gt;string&lt;/type&gt;
+        &lt;value&gt;red&lt;/value&gt;
+      &lt;/parameter1&gt;
+    &lt;/part&gt;
+
+    &lt;part&gt;
+      &lt;name&gt;maserati_granturismo&lt;/name&gt;
+      &lt;class&gt;Car&lt;/class&gt;
+      &lt;parameter1&gt;
+        &lt;type&gt;string&lt;/type&gt;
+        &lt;value&gt;black&lt;/value&gt;
+      &lt;/parameter1&gt;
+    &lt;/part&gt;
+
+    &lt;part&gt;
+      &lt;name&gt;m139p&lt;/name&gt;
+      &lt;class&gt;Engine&lt;/class&gt;
+    &lt;/part&gt;
+
+    &lt;part&gt;
+      &lt;name&gt;f136e&lt;/name&gt;
+      &lt;class&gt;Engine&lt;/class&gt;
+    &lt;/part&gt;
+
+  &lt;/parts&gt;
+
+  &lt;wiring&gt;
+
+    &lt;wire&gt;
+      &lt;source&gt;ferrari_f430&lt;/source&gt;
+      &lt;dest&gt;f136e&lt;/dest&gt;
+      &lt;collaborator&gt;mainEngine&lt;/collaborator&gt;
+    &lt;/wire&gt;
+
+    &lt;wire&gt;
+      &lt;source&gt;maserati_granturismo&lt;/source&gt;
+      &lt;dest&gt;m139p&lt;/dest&gt;
+      &lt;collaborator&gt;mainEngine&lt;/collaborator&gt;
+    &lt;/wire&gt;
+
+  &lt;/wiring&gt;
+
+&lt;/wallaroo&gt;
+</code></pre>
+
+<h3><a name="XML_schema"></a>XML schema</h3>
+
+<p>At this page you can find the XML Schema of wallaroo xml wiring files: <a href="xmlschema.html">XmlSchema</a> </p>
+
+<h2><a name="JSON_Wiring_file_syntax"></a>JSON Wiring file syntax</h2>
+
+<p>The syntax of JSON file is equivalent to the XML one. </p>
+
+<p>Follows an example of a JSON wiring file: </p>
+
+<pre><code class="language-json">
+{
+  &quot;wallaroo&quot;:
+  {
+
+    &quot;plugins&quot;:
+    { 
+      &quot;shared&quot;: &quot;car&quot;,
+      &quot;shared&quot;: &quot;engine&quot;
+    },
+
+    &quot;parts&quot;:
+    [
+      {
+        &quot;name&quot;: &quot;ferrari_f430&quot;,
+        &quot;class&quot;: &quot;Car&quot;,
+        &quot;parameter1&quot;:
+        {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;value&quot;: &quot;red&quot;
+        }
+      },
+
+      {
+        &quot;name&quot;: &quot;maserati_granturismo&quot;,
+        &quot;class&quot;: &quot;Car&quot;,
+        &quot;parameter1&quot;:
+        {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;value&quot;: &quot;black&quot;
+        }
+      },
+
+      {
+        &quot;name&quot;: &quot;m139p&quot;,
+        &quot;class&quot;: &quot;Engine&quot;
+      },
+
+      {
+        &quot;name&quot;: &quot;f136e&quot;,
+        &quot;class&quot;: &quot;Engine&quot;
+      }
+
+    ],
+
+    &quot;wiring&quot;:
+    [
+
+      {
+        &quot;source&quot;: &quot;ferrari_f430&quot;,
+        &quot;dest&quot;: &quot;f136e&quot;,
+        &quot;collaborator&quot;: &quot;mainEngine&quot;
+      },
+
+      {
+        &quot;source&quot;: &quot;maserati_granturismo&quot;,
+        &quot;dest&quot;: &quot;m139p&quot;,
+        &quot;collaborator&quot;: &quot;mainEngine&quot;
+      }
+
+    ]
+  }
+}
+</code></pre>
