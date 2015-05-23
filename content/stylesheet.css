@@ -10,8 +10,12 @@ body {
   background: #fff;
 }
 
-tt{color:#999;font-style:italic;/*font-weight:bold*/}
-
+tt {
+  font-family: Monaco, 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Lucida Console', monospace;
+  font-size: 93%;
+  max-width: 66em;
+}
+  
 blockquote {
   margin: 20px;
 }
