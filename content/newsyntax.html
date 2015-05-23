@@ -1,0 +1,61 @@
+---
+title: New Syntax Guide
+---
+
+<h1><a name="New_Syntax"></a>New Syntax</h1>
+
+<p>Since version 0.7, wallaroo changed its syntax. </p>
+
+<p>The two classes <tt>Device</tt> and <tt>Plug</tt> have been renamed <tt>Part</tt> and <tt>Collaborator</tt>, 
+respectively. </p>
+
+<p>Release 0.7 is backward compatible with the old (deprecated) syntax, but you&#x27;re encouraged to move 
+to the new one, because in the next releases the old syntax will be removed. </p>
+
+<p>Why we changed the syntax? 
+<ul>
+<li>the metaphor <tt>Device</tt> and <tt>Plug</tt> was considered odd by someone </li>
+<li><tt>Part</tt> is the best fit for a thing contained in a <tt>Catalog</tt> </li>
+<li><tt>Collaborator</tt> is the historical word for dependencies </li>
+<li>the new syntax is more understandable </li>
+</ul>   
+</p>
+
+<h1><a name="How_to_change_your_code"></a>How to change your code</h1>
+
+<p>You must change your files according to the following rules: 
+<ul>
+<li>replace all the occurrences of <tt>Device</tt> with <tt>Part</tt> in the source code </li>
+<li>replace all the occurrences of <tt>Plug</tt> with <tt>Collaborator</tt> in the source code  </li>
+<li>replace the tag <tt>devices</tt> with <tt>parts</tt> in the XML configuration files </li>
+<li>replace the tag <tt>device</tt> with <tt>part</tt> in the XML configuration files </li>
+<li>replace the tag <tt>plug</tt> with <tt>collaborator</tt> in the XML configuration files </li>
+<li>replace the key <tt>devices</tt> with <tt>parts</tt> in the JSON configuration files </li>
+<li>replace the key <tt>plug</tt> with <tt>collaborator</tt> in the JSON configuration files </li>
+</ul>
+</p>
+
+<h2><a name="Examples"></a>Examples</h2>
+
+<pre><code class="language-cpp">
+// old code
+// class Triangle : public wallaroo::Device
+
+// new code
+class Triangle : public wallaroo::Part
+</code></pre>
+
+<pre><code class="language-cpp">
+// old code
+// Plug&lt; int &gt; x;
+
+// new code
+Collaborator&lt; int &gt; x;
+</code></pre>
+
+<h2><a name="How_to_verify_your_code"></a>How to verify your code</h2>
+
+<p>Wallaroo v. 0.7 accepts also the old syntax, by default. However, if you define the symbol 
+<tt>WALLAROO_REMOVE_DEPRECATED</tt> when compiling, you will disable the old syntax support. 
+In this way, you can check if your code is fully compatible with the new syntax and ready to move to 
+the next (future) release, in which by default the old syntax will not be supported. </p>
