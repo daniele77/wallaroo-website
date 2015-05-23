@@ -1,0 +1,175 @@
+---
+title: Wallaroo Attributes
+---
+
+<h1><a name="Attributes"></a>Attributes</h1>
+
+<p>Starting from version 0.6, you can add &quot;attributes&quot; to your objects. 
+Wallaroo attributes are similar to standard C++ class attributes, except their value can be assigned 
+in the configuration file or by using a DSL similar to the one used for wiring. </p>
+
+<p>Wallaroo attributes are the solution to the limit in the numbers of ctor parameters in classes managed 
+by wallaroo. (see <a href="https://sourceforge.net/p/wallaroolib/wiki/CtorParameters/">this page and
+discussion on the wiki</a>). </p>
+
+<h1><a name="Define_attributes_in_your_classes"></a>Define attributes in your classes</h1>
+
+<p>This is an example of attribute declaration: </p>
+
+<pre><code class="language-cpp">
+// triangle.h
+
+class Triangle : public wallaroo::Part
+{
+    ...
+private:
+    const Attribute&lt; unsigned int &gt; base;
+    const Attribute&lt; unsigned int &gt; height;
+};
+</code></pre>
+
+<p>In the constructor, you must give a name to your attributes, so that you can name them in the configuration 
+file or in the DSL: </p>
+
+<pre><code class="language-cpp">
+// triangle.cpp
+
+Triangle::Triangle() :
+    base( &quot;base&quot;, RegistrationToken() ),
+    height( &quot;height&quot;, RegistrationToken() ),
+    ...
+{
+}
+</code></pre>
+
+<h1><a name="Assign_attribute_values_from_code"></a>Assign attribute values from code</h1>
+
+<p>After you create an object, you can assign a value to its attributes by using this Domain Specific Language: </p>
+
+<pre><code class="language-cpp">
+    set_attribute( &quot;base&quot; ).of( shape_catalog[ &quot;triangle1&quot; ] ).to( 10 );
+    set_attribute( &quot;height&quot; ).of( shape_catalog[ &quot;triangle1&quot; ] ).to( 20 );
+</code></pre>
+
+<p>To save some typing, if you are referring to the same catalog, you can write: </p>
+
+<pre><code class="language-cpp">
+    wallaroo_within( shape_catalog )
+    {
+        set_attribute( &quot;base&quot; ).of( &quot;triangle1&quot; ).to( 10 );
+        set_attribute( &quot;height&quot; ).of( &quot;triangle1&quot; ).to( 20 );
+    }
+</code></pre>
+
+<p>Wallaroo can throw these exceptions: 
+<ul>
+<li><tt>ElementNotFound</tt> if the attributes doesn&#x27;t exist in the object specified </li>
+<li><tt>WrongType</tt> if the value is not of the type of the attribute </li>
+</ul>
+</p>
+
+<h1><a name="Assign_attribute_values_from_cfg_file"></a>Assign attribute values from cfg file</h1>
+
+<p>Setting attributes, as well as wiring, can be performed in the configuration file. </p>
+
+<h2><a name="XML_file_syntax"></a>XML file syntax</h2>
+
+<p>This is a sample of an XML file example: </p>
+
+<pre><code class="language-xml">
+    &lt;part&gt;
+      &lt;name&gt;triangle1&lt;/name&gt;
+      &lt;class&gt;Triangle&lt;/class&gt;
+      &lt;attribute&gt;
+        &lt;name&gt;base&lt;/name&gt;
+        &lt;value&gt;10&lt;/value&gt;
+      &lt;/attribute&gt;
+      &lt;attribute&gt;
+        &lt;name&gt;height&lt;/name&gt;
+        &lt;value&gt;20&lt;/value&gt;
+      &lt;/attribute&gt;
+    &lt;/part&gt;
+</code></pre>
+
+<h2><a name="JSON_file_syntax"></a>JSON file syntax</h2>
+
+<p>This is a sample of a JSON file example: </p>
+
+<pre><code class="language-json">
+   &quot;parts&quot;:
+    [
+      {
+        &quot;name&quot;: &quot;triangle1&quot;,
+        &quot;class&quot;: &quot;Triangle&quot;,
+        &quot;attribute&quot;:
+          {
+            &quot;name&quot;: &quot;base&quot;,
+            &quot;value&quot;: 10
+          },
+        &quot;attribute&quot;:
+          {
+            &quot;name&quot;: &quot;height&quot;,
+            &quot;value&quot;: 20
+          }    
+      },
+</code></pre>
+
+<h1><a name="Object_setup_after_attributes_initialization"></a>Object setup after attributes initialization</h1>
+
+<p>With wallaroo attributes you can work around the limit on contructor parameters. 
+However, using attributes instead of constructor parameters requires some care. </p>
+
+<p>The constructor is the place where you perform initialization tasks for your objects, 
+possibly using the constructor parameters. </p>
+
+<p>However, the attribute assignment is performed after the objects are created, i.e. after the constructor calls. 
+This means that inside the constructors your attributes have undefined value, so you cannot use attributes inside 
+the constructors. </p>
+
+<p>To solve this issue, wallaroo provides the methods <tt>Catalog::Init()</tt> and <tt>Part::Init()</tt>. </p>
+
+<p>If you need the attributes value to perform the initialization of an object, you can override the virtual 
+method <tt>Part::Init()</tt>. Inside this method you can put the initialization of your object 
+(the code put in the ctor) safely assuming the attributes value are correct. </p>
+
+<p>The method <tt>Catalog::Init()</tt> calls <tt>Part::Init()</tt> for each object contained in the <tt>Catalog</tt>. 
+During the application initialization, you should call <tt>Catalog::Init()</tt> <strong>after</strong> 
+the wiring and attribute initialization. </p>
+
+<p>This snippet of code shows how to perform the initialization: </p>
+
+<pre><code class="language-cpp">
+// triangle.h
+
+class Triangle : public wallaroo::Part
+{
+public:
+    virtual void Init()
+    {
+        // use attributes: here they&#x27;ve been already valorized
+    }
+    ...
+private:
+    const Attribute&lt; unsigned int &gt; base;
+    const Attribute&lt; unsigned int &gt; height;
+};
+
+...
+
+// main.cpp
+
+int main()
+{
+    ...
+
+    wallaroo_within( shape_catalog )
+    {
+        set_attribute( &quot;base&quot; ).of( &quot;triangle1&quot; ).to( 10 );
+        set_attribute( &quot;height&quot; ).of( &quot;triangle1&quot; ).to( 20 );
+    }
+
+    // this calls Init() for every object in the catalog
+    shape_catalog.Init();
+
+    ...
+</code></pre>
