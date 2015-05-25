@@ -13,7 +13,7 @@
 #   item, use the pattern “/about/*/”; “/about/*” will also select the parent,
 #   because “*” matches zero or more characters.
 
-# per doxygen
+# per doxygen e immagini
 compile '/assets/*' do
 end
 
