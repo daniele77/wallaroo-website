@@ -19,7 +19,18 @@ end
 
 # per tutto il resto
 compile '*' do
-  if item[:extension] == 'css'
+  if item[:filename] == 'content/index.html'
+    # syntax highlighting (dev'essere prima del resto):
+    filter :colorize_syntax,
+           :colorizers => { :ruby => :coderay, :cpp => :coderay },
+           #:coderay    => { :line_numbers => :table }
+		   :coderay    => {}
+		   #:coderay    => { :css => :style }
+    filter :erb
+    layout 'home'
+    # se voglio i path relativi:
+    filter :relativize_paths, :type => :html
+  elsif item[:extension] == 'css'
     # don’t filter stylesheets
     # se voglio i path relativi:
     filter :relativize_paths, :type => :css
