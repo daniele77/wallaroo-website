@@ -108,6 +108,14 @@ body > header {
   box-shadow: 0 0 24px rgba(0, 0, 0, 0.6);
   z-index: 1; }
 
+header img {
+  margin: 5px;
+  float: left;
+  width: 80px;
+  height: 80px;
+  background: #555;
+}
+
 #logo {
   font-size: 36px;
   line-height: 48px;
@@ -230,11 +238,13 @@ aside.banner {
   #content ul ul, #content ul ol, #content ol ul, #content ol ol {
     margin-top: 0;
     margin-bottom: 0; }
+    /*
   #content pre {
     padding-left: 12px;
     padding-right: 12px;
     border: 1px solid #ccc;
     font-family: "Bitstream Vera Sans Mono", Consolas, monospace; }
+    */
   #content dt {
     font-weight: bold; }
   #content a {

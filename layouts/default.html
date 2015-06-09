@@ -17,6 +17,7 @@
   
   <header>
     <hgroup>
+      <a href="index.html"><img src="wallaroo_logo.png" alt="logo" /></a>
       <h1 id="logo"><a href="index.html" title="Homepage">Wallaroo</a></h1>
       <h2 id="slogan">C++ Dependency Injection</h2>
     </hgroup>
@@ -38,7 +39,6 @@
 <% if @item[:type] == 'doc' %>
       <h2>Documentation</h2>
       <ul>
-        <li><a href="http://nanoc.ws/docs/">Documentation</a></li>
         <li><a href="gettingstarted.html">Getting Started</a></li>
         <li><a href="fiveminutestour.html">5 minutes tour</a></li>
         <li><a href="tutorial.html">Tutorial</a></li>
@@ -58,30 +58,23 @@
         <li><a href="irc://chat.freenode.net/#nanoc">IRC Channel</a></li>
         <li><a href="http://github.com/nanoc/nanoc/wiki/">Wiki</a></li>
       </ul>
-<% end %>      
+<% end %>
 <% if @item[:type] == 'home' %>
-      <h2><a href="index.html">Home</a></h2>
-      <h2>Prova</h2>
+      <h2>Stay in touch!</h2>
       <ul>
-        <li><a href="http://nanoc.ws/docs/">Documentation</a></li>
-        <li><a href="gettingstarted.html">Getting Started</a></li>
-        <li><a href="fiveminutestour.html">5 minutes tour</a></li>
-        <li><a href="tutorial.html">Tutorial</a></li>
-        <li><a href="faq.html">FAQ</a></li>
-        <li><a href="attributes.html">Wallaroo Attributes</a></li>
-        <li><a href="newsyntax.html">New Syntax Guide</a></li>
-        <li><a href="wiring.html">Wiring File Description</a></li>
-        <li><a href="doxy/index.html">Doxygen</a></li>
-        <li><a href="xmlschema.html">XML schema</a></li>
-        <li><a href="samples.html">Samples</a></li>
-        <li><a href="releasenotes.html">Release Notes</a></li>
-        <li><a href="roadmap.html">Roadmap</a></li>
-      </ul>
-      <h2>Community</h2>
-      <ul>
-        <li><a href="http://groups.google.com/group/nanoc/">Discussion Group</a></li>
-        <li><a href="irc://chat.freenode.net/#nanoc">IRC Channel</a></li>
-        <li><a href="http://github.com/nanoc/nanoc/wiki/">Wiki</a></li>
+        <li><a href="mailto:wallaroolibrary@gmail.com" rel="nofollow">Write to me</a></li>
+        <li><a href="https://twitter.com/intent/tweet?button_hashtag=wallaroolib" class="twitter-hashtag-button" data-related="DPallastrelli" data-url="http://wallaroolib.sourceforge.net/">
+            Tweet #wallaroolib</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+        </li>
+        <li><a href="https://twitter.com/DPallastrelli" class="twitter-follow-button" data-show-count="false">
+            Follow the author</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+        </li>
+        <li><a href="https://twitter.com/intent/tweet?screen_name=DPallastrelli" class="twitter-mention-button">
+            Tweet to the author</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+        </li>
       </ul>
 <% end %>
     </aside>
