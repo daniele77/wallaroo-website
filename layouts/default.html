@@ -25,10 +25,10 @@
         <ul>
         <li><a href="index.html" hreflang="en">Home</a></li>
         <li><a href="http://sourceforge.net/projects/wallaroolib/files/" hreflang="en">Download</a></li>
-        <li><a href="fiveminutestour.html" hreflang="en">Documentation</a></li>
+        <li><a href="gettingstarted.html" hreflang="en">Documentation</a></li>
         <li><a href="quickref.html" hreflang="en">Quick Reference</a></li>
-        <li><a href="syntax.html" hreflang="en">Source</a></li>
-        <li><a href="syntax.html" hreflang="en">Author</a></li>
+        <li><a href="http://sourceforge.net/p/wallaroolib/code/" hreflang="en">Source</a></li>
+        <li><a href="author.html" hreflang="en">Author</a></li>
         </ul>
     </nav>    
   </header>
@@ -37,7 +37,7 @@
 
     <aside>
 <% if @item[:type] == 'doc' %>
-      <h2>Documentation</h2>
+      <h2>User's Guide</h2>
       <ul>
         <li><a href="gettingstarted.html">Getting Started</a></li>
         <li><a href="fiveminutestour.html">5 minutes tour</a></li>
@@ -45,18 +45,26 @@
         <li><a href="faq.html">FAQ</a></li>
         <li><a href="attributes.html">Wallaroo Attributes</a></li>
         <li><a href="newsyntax.html">New Syntax Guide</a></li>
-        <li><a href="wiring.html">Wiring File Description</a></li>
-        <li><a href="doxy/index.html">Doxygen</a></li>
-        <li><a href="xmlschema.html">XML schema</a></li>
+      </ul>
+      <h2>References</h2>
+      <ul>
+        <li><a href="doxy/index.html">API Documentation</a></li>
+        <li><a href="wiring.html">Wiring File Description</a></li>        
+        <li><a href="xmlschema.html">XML wiring file schema</a></li>
         <li><a href="samples.html">Samples</a></li>
+      </ul>
+      <h2>Releases</h2>
+      <ul>
         <li><a href="releasenotes.html">Release Notes</a></li>
         <li><a href="roadmap.html">Roadmap</a></li>
       </ul>
       <h2>Community</h2>
       <ul>
-        <li><a href="http://groups.google.com/group/nanoc/">Discussion Group</a></li>
-        <li><a href="irc://chat.freenode.net/#nanoc">IRC Channel</a></li>
-        <li><a href="http://github.com/nanoc/nanoc/wiki/">Wiki</a></li>
+        <li><a href="http://sourceforge.net/p/wallaroolib/tickets/">Tickets</a></li>
+        <li><a href="http://sourceforge.net/p/wallaroolib/wiki/TableOfContents/">Wiki</a></li>
+        <li><a href="http://sourceforge.net/p/wallaroolib/discussion/">Forum</a></li>
+        <li><a href="http://sourceforge.net/p/wallaroolib/code/">Sources</a></li>
+        <li><a href="http://sourceforge.net/p/wallaroolib/blog/">Blog</a></li>
       </ul>
 <% end %>
 <% if @item[:type] == 'home' %>
