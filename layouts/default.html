@@ -24,11 +24,13 @@
     <nav>
         <ul>
         <li><a href="index.html" hreflang="en">Home</a></li>
-        <li><a href="http://sourceforge.net/projects/wallaroolib/files/" hreflang="en">Download</a></li>
+        <!-- <li><a href="http://sourceforge.net/projects/wallaroolib/files/" hreflang="en">Download</a></li> -->
+        <li><a href="download.html" hreflang="en">Download</a></li>
         <li><a href="gettingstarted.html" hreflang="en">Documentation</a></li>
-        <li><a href="http://sourceforge.net/p/wallaroolib/code/" hreflang="en">Source</a></li>
+        <!-- <li><a href="http://sourceforge.net/p/wallaroolib/code/" hreflang="en">Source</a></li> -->
         <li><a href="http://sourceforge.net/p/wallaroolib/tickets/" hreflang="en">Tickets</a></li>
-        <li><a href="author.html" hreflang="en">Author</a></li>
+        <li><a href="developers.html" hreflang="en">Developers</a></li>
+        <!-- <li><a href="author.html" hreflang="en">Author</a></li> -->
         </ul>
     </nav>    
   </header>
@@ -53,6 +55,7 @@
         <li><a href="xmlschema.html">XML wiring file schema</a></li>
         <li><a href="samples.html">Samples</a></li>
       </ul>
+<!--      
       <h2>Releases</h2>
       <ul>
         <li><a href="releasenotes.html">Release Notes</a></li>
@@ -60,11 +63,12 @@
       </ul>
       <h2>Community</h2>
       <ul>
-        <!-- <li><a href="http://sourceforge.net/p/wallaroolib/tickets/">Tickets</a></li> -->
+        <li><a href="http://sourceforge.net/p/wallaroolib/tickets/">Tickets</a></li>
         <li><a href="http://sourceforge.net/p/wallaroolib/wiki/TableOfContents/">Wiki</a></li>
         <li><a href="http://sourceforge.net/p/wallaroolib/discussion/">Forum</a></li>
         <li><a href="http://sourceforge.net/p/wallaroolib/code/">Sources</a></li>
         <li><a href="http://sourceforge.net/p/wallaroolib/blog/">Blog</a></li>
+-->        
       </ul>
 <% end %>
 <% if @item[:type] == 'home' %>
@@ -75,6 +79,7 @@
       </ul>
       <h2>Stay in touch</h2>
       <ul>
+        <li><a href="author.html">About me</a></li>
         <li><a href="mailto:wallaroolibrary@gmail.com" rel="nofollow">Write to me</a></li>
         <li><a href="https://twitter.com/intent/tweet?button_hashtag=wallaroolib" class="twitter-hashtag-button" data-related="DPallastrelli" data-url="http://wallaroolib.sourceforge.net/">
             Tweet #wallaroolib</a>
@@ -88,6 +93,28 @@
             Tweet to the author</a>
             <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
         </li>
+      </ul>
+<% end %>
+<% if @item[:type] == 'dev' %>
+      <h2><a href="developers.html">Developers</a></h2>
+      <ul>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="http://sourceforge.net/p/wallaroolib/" rel="nofollow">SourceForge project</a></li>
+        <li><a href="http://sourceforge.net/p/wallaroolib/code/" rel="nofollow">Sources</a></li>
+        <li><a href="http://sourceforge.net/p/wallaroolib/tickets/" rel="nofollow">Tickets</a></li>
+      </ul>
+      <h2>Community</h2>
+      <ul>
+        <li><a href="http://sourceforge.net/p/wallaroolib/wiki/TableOfContents/" rel="nofollow">Wiki</a></li>
+        <li><a href="http://sourceforge.net/p/wallaroolib/discussion/" rel="nofollow">Forum</a></li>
+        <li><a href="http://sourceforge.net/p/wallaroolib/blog/" rel="nofollow">Blog</a></li>
+      </ul>
+<% end %>
+<% if @item[:type] == 'download' %>
+      <h2><a href="download.html">Download</a></h2>
+      <ul>
+        <li><a href="releasenotes.html">Release Notes</a></li>
+        <li><a href="http://sourceforge.net/projects/wallaroolib/files/" hreflang="en">Download</a></li>
       </ul>
 <% end %>
     </aside>
