@@ -33,7 +33,7 @@ type: doc
 <h2><a name="Getting_Wallaroo"></a>Getting Wallaroo</h2>
 
 <p>The easiest way to get a copy of Wallaroo is to download an archive from the page
-<a href="http://sourceforge.net/projects/wallaroolib/files/" rel="nofollow">Downloads of the sourceforge page</a>.
+<a href="http://sourceforge.net/projects/wallaroolib/files/" rel="nofollow">Downloads</a>  of the sourceforge project.
 Wallaroo is delivered in a ZIP file for Windows users and in a compressed TAR file (.tgz) for Unix/Linux users.
 Both archives contain the same files, the only difference is that all text files in the ZIP files have line endings 
 suitable for Windows (CR-LF), while the text files in the TAR file have line endings suitable for Unix/Linux (LF only).</p>
@@ -89,7 +89,8 @@ make UCFLAGS=-I/opt/boost_1_50_0/
 
 <p>To build your own project, the compiler needs to know the include path of the wallaroo libraries. </p>
 
-<p>If your compiler is not C++11 compliant (or if you plan to use XmlConfiguration<a href="/p/wallaroo/w/edit/XmlConfiguration">?</a> or JsonConfiguration<a href="/p/wallaroo/w/edit/JsonConfiguration">?</a> classes), you should also provide the boost path. </p>
+<p>If your compiler is not C++11 compliant (or if you plan to use XmlConfiguration or 
+JsonConfiguration classes), you should also provide the boost path. </p>
 
 <p>Fore example, if you use gcc, you can use the following syntax (with boost): </p>
 
@@ -197,7 +198,7 @@ shared_ptr&lt; Car &gt; maserati = catalog[ &quot;maserati_granturismo&quot; ];
 <p>So far so good. Now, to do useful work, your objects need to talk to each other. 
 For example, class <tt>Car</tt> may need to invoke <tt>Engine</tt> methods. </p>
 
-<p>With this code you say that class <tt>Car</tt> has a &quot;pointer&quot; to reach an object of class <tt>Engine</tt>: </p>
+<p>With this code you're saying that class <tt>Car</tt> has a &quot;pointer&quot; to reach an object of class <tt>Engine</tt>: </p>
 
 <pre><code class="language-cpp">
 
