@@ -4,6 +4,8 @@ type: doc
 ---
 <h1>Getting Started</h1>
 
+<!--
+
 <p>
 <ul>
 <li> <a href="#Getting_Started">Getting Started</a>
@@ -29,6 +31,7 @@ type: doc
 </ul>
 </ul> 
 </p>
+-->
 
 <h2><a name="Getting_Wallaroo"></a>Getting Wallaroo</h2>
 
@@ -89,10 +92,10 @@ make UCFLAGS=-I/opt/boost_1_50_0/
 
 <p>To build your own project, the compiler needs to know the include path of the wallaroo libraries. </p>
 
-<p>If your compiler is not C++11 compliant (or if you plan to use XmlConfiguration or 
-JsonConfiguration classes), you should also provide the boost path. </p>
+<p>If your compiler is not C++11 compliant (or if you plan to use <tt>XmlConfiguration</tt> or 
+<tt>JsonConfiguration</tt> classes), you should also provide the boost path. </p>
 
-<p>Fore example, if you use gcc, you can use the following syntax (with boost): </p>
+<p>For example, if you use gcc, you can use the following syntax (with boost): </p>
 
 <pre><code class="language-cpp">
 g++ -Wall -I&lt;boost_path&gt; -I&lt;wallaroo_path&gt; *.cpp -o &lt;app_exe&gt;
@@ -187,13 +190,11 @@ void Catalog::Create( const std::string &amp;id, const std::string &amp;classNam
 
 </code></pre>
 
-<p>The first parameter is the name of the instance you&#x27;re going to create, the second is the name of its class and the (optional) others parameters are the parameters you want to pass to the constructor of the object. </p><p>After filling the catalog, you can get a pointer to an object in this way:</p>
+<p>The first parameter is the name of the instance you&#x27;re going to create, the second is the name of its class and the (optional) others parameters are the parameters you want to pass to the constructor of the object. </p><p>After filling the catalog, you can get a (smart) pointer to an object in this way:</p>
 
 <pre><code class="language-cpp">
 shared_ptr&lt; Car &gt; maserati = catalog[ &quot;maserati_granturismo&quot; ];
 </code></pre>
-
-<p>As you can see, the catalog returns a shared pointer. </p>
 
 <p>So far so good. Now, to do useful work, your objects need to talk to each other. 
 For example, class <tt>Car</tt> may need to invoke <tt>Engine</tt> methods. </p>

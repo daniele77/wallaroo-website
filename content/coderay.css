@@ -16,6 +16,12 @@
   margin: 0px;
 }
 
+/* sovrascrive la regola in stylesheet.css che mette margini su tutti i pre */
+.CodeRay .code pre {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+
 span.CodeRay { white-space: pre; border: 0px; padding: 2px; }
 
 table.CodeRay { border-collapse: collapse; width: 100%; padding: 2px; }

@@ -11,7 +11,7 @@
 /*  Resets
     ------  */
 html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6,
-p, blockquote, pre, a, abbr, address, cite, code, del, dfn, em,
+p, pre, a, abbr, address, cite, code, del, dfn, em,
 img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, /*hr,*/
 dl, dt, dd, ol, ul, li, fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
@@ -19,7 +19,11 @@ article, aside, canvas, details, figure, figcaption, hgroup,
 menu, footer, header, nav, section, summary, time, mark, audio, video {
   margin: 0;
   padding: 0;
-  border: 0; }
+  border: 0;
+}
+
+blockquote {
+}
 
 article, aside, canvas, figure, figure img, figcaption, hgroup,
 footer, header, nav, section, audio, video {
@@ -120,12 +124,17 @@ header img {
   font-size: 36px;
   line-height: 48px;
   margin: 12px;
-  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5); }
-  #logo a {
+  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+#logo a {
     color: #eee;
-    text-decoration: none; }
-    #logo a:hover {
-      color: #fff; }
+    text-decoration: none;
+}
+
+#logo a:hover {
+  color: #fff;
+}
 
 #slogan {
   font-size: 100%;
@@ -332,8 +341,10 @@ footer {
     Overrides styles for devices with a
     device-pixel-ratio of 2+, such as iPhone 4.
     -----------------------------------------------    */
+
 a:hover {
-  background-color: rgba(0, 0, 0, 0.1); }
+  background-color: rgba(0, 0, 0, 0.1);
+}
 
 aside.banner {
   font-size: 18px;

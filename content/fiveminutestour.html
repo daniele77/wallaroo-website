@@ -15,6 +15,7 @@ type: doc
 with the macro <tt>WALLAROO_REGISTER</tt>. E.g.:</p>
 
 <pre><code class="language-cpp">
+// car.h
 #include "wallaroo/registered.h"
 
 using namespace wallaroo;
@@ -28,9 +29,8 @@ public:
 };
 </code></pre>
 
-<p>and you must define it in the implementation file in this way:</p>
-
 <pre><code class="language-cpp">
+// car.cpp
 WALLAROO_REGISTER( Car, string )
 
 Car::Car( const string& color )
@@ -42,7 +42,7 @@ Car::Car( const string& color )
 ...
 </code></pre>
 
-<p>If your class depends on other objects, you must add wallaroo::Collaborators to it:</p>
+<p>If your class depends on other objects, you must add <tt>wallaroo::Collaborators</tt> to it:</p>
 
 <pre><code class="language-cpp">
 class Car : public Part
@@ -117,7 +117,7 @@ use( myCatalog[ "m139p" ] ).as( "engine" ).of( myCatalog[ "maserati_granturismo"
 you can use <tt>Catalog::IsWiringOk()</tt> (returns a bool) or 
 <tt>Catalog::CheckWiring()</tt> (throws an exception).</p>
 
-<p>Finally, you can get a pointer to an object by using the operator [] of Catalog:</p>
+<p>Finally, you can get a pointer to an object by using the <tt>operator []</tt> of <tt>Catalog</tt>:</p>
 
 <pre><code class="language-cpp">
 shared_ptr< Car > maserati = catalog[ "maserati_granturismo" ];
