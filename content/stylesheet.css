@@ -61,9 +61,6 @@ body {
   font-size: 12px;
   line-height: 24px; }
 
-*:target::after {
-  content: " ☜"; }
-
 /* Typographics grid overlay */
 .grid {
   background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
