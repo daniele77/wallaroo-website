@@ -1,15 +1,5 @@
 @charset "UTF-8";
-/*  Based on the Less Framework 4
-    http://lessframework.com
-    by Joni Korpi
-    License: http://opensource.org/licenses/mit-license.php */
-/***** Variables for easy customization *****/
-/* the baseline height in px */
-/* The overlay color for the background image */
-/* The font size of the logo in px */
-/* Color settings */
-/*  Resets
-    ------  */
+
 html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6,
 p, pre, a, abbr, address, cite, code, del, dfn, em,
 img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, /*hr,*/
@@ -54,13 +44,22 @@ a img {
   font-size: 14px;
   line-height: 24px; }
 
+  /*
 body {
   font: 14px/24px 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+*/
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /*font-size: 14px;*/
+  line-height: 1.5;
+}
 
+/*
 .small, small {
   font-size: 12px;
   line-height: 24px; }
-
+*/
+  
 /* Typographics grid overlay */
 .grid {
   background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
@@ -90,14 +89,15 @@ body {
 body {
   width: 992px;
   margin: 0 auto 48px;
-  color: #3c3c3c;
+  /*color: #3c3c3c;*/
   -webkit-text-size-adjust: 100%;
   /* Stops Mobile Safari from auto-adjusting font-sizes */
   background-image: -moz-linear-gradient(rgba(255, 255, 128, 0.1), rgba(255, 255, 128, 0.1)), url("bg.png");
   background-image: -webkit-linear-gradient(rgba(255, 255, 128, 0.1), rgba(255, 255, 128, 0.1)), url("bg.png");
   background-image: -o-linear-gradient(rgba(255, 255, 128, 0.1), rgba(255, 255, 128, 0.1)), url("bg.png");
   background-image: -ms-linear-gradient(rgba(255, 255, 128, 0.1), rgba(255, 255, 128, 0.1)), url("bg.png");
-  background-image: linear-gradient(rgba(255, 255, 128, 0.1), rgba(255, 255, 128, 0.1)), url("bg.png"); }
+  background-image: linear-gradient(rgba(255, 255, 128, 0.1), rgba(255, 255, 128, 0.1)), url("bg.png");
+}
 
 body > header {
   position: relative;
@@ -437,13 +437,16 @@ aside a {
 
 footer {
   clear: both;
-  font-size: 92%;
-  text-align: left; }
-  footer a {
+  font-size: 85%;
+  text-align: left;
+}
+
+footer a {
     color: #898989; }
     footer a:hover {
       text-decoration: none;
-      color: #666; }
+      color: #666;
+}
 
 /* common rules */
 acronym {
