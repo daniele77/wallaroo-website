@@ -77,6 +77,8 @@ checks:
     #   exclude: ['^/server_status']
     exclude: []
 
+base_url: http://wallaroolib.sourceforge.net
+    
 deploy:
   public:
     kind: rsync

@@ -12,6 +12,9 @@ You need the gem:
 To get syntax highlighting, you need the gem:
 	gem install coderay
     
+To generate sitemap.xml, you need the gem:
+    gem install builder
+    
 Compile:
     nanoc
 Deploy (staging):

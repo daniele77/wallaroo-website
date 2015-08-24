@@ -13,6 +13,10 @@
 #   item, use the pattern “/about/*/”; “/about/*” will also select the parent,
 #   because “*” matches zero or more characters.
 
+compile 'sitemap' do
+  filter :erb
+end
+
 # per doxygen e immagini
 compile '/assets/*' do
 end
@@ -39,6 +43,9 @@ compile '*' do
   end
 end
 
+route 'sitemap' do
+  item.identifier.chop + '.xml'
+end
 
 # file doxygen nella root
 route '/assets/*' do
