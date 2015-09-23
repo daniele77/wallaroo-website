@@ -102,7 +102,7 @@ you can define the symbol <tt>WALLAROO_FORCE_USE_STD</tt>. </p>
 derived classes. </p>
 <p>For classes defined in the main address space, you can have up to 2 constructor parameters. For classes 
 defined in a shared library, your classes cannot have constructor parameters. </p>
-<p>The right way to deal with this limit is to use <a href="/p/wallaroo/wiki/Attributes">wallaroo attributes</a> 
+<p>The right way to deal with this limit is to use <a href="http://sourceforge.net/p/wallaroolib/wiki/Attributes/">wallaroo attributes</a> 
 instead of constructor parameters. Basically, you can substitute the constructor parameters with 
 <tt>wallaroo::Attribute</tt> data members: they&#x27;re typed and wallaroo can initialize them through the 
 usual DSL or the configuration file. </p>
