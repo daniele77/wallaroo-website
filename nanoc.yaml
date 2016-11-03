@@ -50,6 +50,8 @@ data_sources:
     # same as the items root, but applies to layouts rather than items.
     layouts_root: /
 
+    identifier_type: legacy
+
     # Whether to allow periods in identifiers. When turned off, everything
     # past the first period is considered to be the extension, and when
     # turned on, only the characters past the last period are considered to
@@ -63,8 +65,11 @@ data_sources:
     encoding: utf-8
 
   -
-    type: static
+    type: filesystem
+    content_dir: 'static'
     items_root: /assets/
+    layouts_dir: null
+
 
 # Configuration for the “check” command, which run unit tests on the site.
 checks:

@@ -13,16 +13,16 @@
 #   item, use the pattern “/about/*/”; “/about/*” will also select the parent,
 #   because “*” matches zero or more characters.
 
-compile 'sitemap' do
+compile '/sitemap/' do
   filter :erb
 end
 
 # per doxygen e immagini
-compile '/assets/*' do
+compile '/assets/**/*' do
 end
 
 # per tutto il resto
-compile '*' do
+compile '**/*' do
   if item[:extension] == 'css'
     # don’t filter stylesheets
     # se voglio i path relativi:
@@ -43,17 +43,18 @@ compile '*' do
   end
 end
 
-route 'sitemap' do
+route '/sitemap/' do
   item.identifier.chop + '.xml'
 end
 
 # file doxygen nella root
-route '/assets/*' do
+route '/assets/**/*' do
   # /assets/foo.html/ → /foo.html
-  item.identifier[7..-2]
+  item.identifier.to_s[7..-1]
 end
 
-route '*' do
+# route '*' do
+route '**/*' do
   if item[:extension] == 'css'
     # Write item with identifier /foo/ to /foo.css
     item.identifier.chop + '.css'
@@ -70,4 +71,5 @@ route '*' do
   end
 end
 
-layout '*', :erb
+# layout '*', :erb
+layout '/**/*', :erb
