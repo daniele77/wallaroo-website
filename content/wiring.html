@@ -4,8 +4,9 @@ type: doc
 ---
 <h1><a name="Wallaroo_Wiring_Files"></a>Wallaroo Wiring Files</h1>
 
-<p>Wallaroo can load the description of your software from a configuration file, 
-in XML or JSON format. You can use the file to specify the following: 
+<p>Wallaroo can load the description of your software from a configuration file 
+in XML, JSON or WAL format (WAL is a synthetic custom format explicitly designed for wallaroo applications).
+You can use the file to specify the following: 
 <ul>
 <li>which objects instantiate </li>
 <li>the concrete class of each object </li>
@@ -19,7 +20,18 @@ application with the configuration file. </p>
 <h2><a name="Loading_a_wiring_file"></a>Loading a wiring file</h2>
 
 <p>Once you have a <tt>Catalog</tt> object in your application, you can fill it by using the classes 
-<tt>XmlConfiguration</tt> or <tt>JsonConfiguration</tt>. </p>
+<tt>Configuration</tt>, <tt>XmlConfiguration</tt> or <tt>JsonConfiguration</tt>. </p>
+
+<p>To load a wal file: </p>
+
+<pre><code class="language-cpp">
+Catalog catalog;
+...
+Configuration file( &quot;wiring.wal&quot; );
+file.Fill( catalog );
+...
+catalog.CheckWiring(); // throws a WiringError exception if any collaborator is missing
+</code></pre>
 
 <p>To load a xml file: </p>
 
@@ -293,3 +305,54 @@ in the source object: </p>
   }
 }
 </code></pre>
+
+<h2><a name="WAL_Wiring_file_syntax"></a>WAL Wiring file syntax</h2>
+
+<p>A WAL file is the recommended way to specify the wiring of an application.
+  Compared to XML and JSON, a WAL file is much more compact;
+  moreover, the parser does not have a dependency from boost libraries.</p>
+
+<p>A WAL file is composed of a sequence of sentences. 
+  Each sentence is terminated by a semicolon, and can be one of the following:
+  <ul>
+      <li>a <tt>@load</tt> statement (load a shared library)</li>
+      <li>a <tt>new</tt> statement (create a new instance)</li>
+      <li>a dependency specification</li>
+  </ul>
+  This is an example of the three statements:         
+</p>
+
+<pre><code class="language-bash">
+@load "plugin";  # load the dynamic library named "plugin.so" or "plugin.dll"
+
+myObject = new MyClass( att1=5, att2=3.14 );   # create the instance myObject of class MyClass and assign the attributes att1 and att2
+
+myObject.dependency = otherObject;    # assign a dependency
+</code></pre>
+
+You can insert line comments by using the <tt>#</tt> character.
+
+<h3><a name="Example"></a>Example</h3>
+
+<p>This is an example of a WAL wiring file: </p>
+
+<pre><code class="language-bash">
+@load "car";
+@load "engine";
+
+ferrari_f430 = new Car( color="red" );
+maserati_granturismo = new Car( color="black" );
+
+m139p = new Engine;
+f136e = new Engine;
+
+ferrari_f430.mainEngine = f136e;
+maserati_granturismo.mainEngine = m139p;
+</code></pre>
+
+<p>
+As you can see, with the new syntax you only need one line to set up a dependency, 
+while in XML you need five. Of course, the improvement is not the less typing  
+rather the fact that the wiring can now fit on one page of your editor
+so that you can better understand the whole object lattice.
+</p>

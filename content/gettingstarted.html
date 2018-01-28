@@ -50,7 +50,7 @@ and require no separately-compiled library binaries or special treatment when li
 
 <h2><a name="External_Dependencies"></a>External Dependencies</h2>
 
-<p>Wallaroo relies on some of the famous <strong>boost</strong> libraries. You can donwload the latest
+<p>Wallaroo relies on some of the famous <strong>boost</strong> libraries. You can download the latest
 version from <a href="http://www.boost.org" rel="nofollow">here</a>, extract it wherever you want in your 
 hard disk and include its path when compiling your application that uses Wallaroo. </p>
 
@@ -65,8 +65,7 @@ and relies only on the new C++ standard features.</strong> </p>
 <ul>
 <li>GNU makefile </li>
 <li>Windows nmake makefile </li>
-<li>visual studio 2008 solution file </li>
-<li>visual studio 2013 solution file </li>
+<li>visual studio solution file </li>
 </ul>
 </p>
 
@@ -81,7 +80,7 @@ make UCFLAGS=-I&lt;boost_path&gt;
 <p>example: </p>
 
 <pre><code class="language-cpp">
-make UCFLAGS=-I/opt/boost_1_50_0/
+make UCFLAGS=-I/opt/boost_1_66_0/
 </code></pre>
 
 <h3><a name="Visual_Studio"></a>Visual Studio</h3>
@@ -109,12 +108,12 @@ g++ -Wall -std=c++0x -I&lt;wallaroo_path&gt; *.cpp -o &lt;app_exe&gt;
 
 <h2><a name="Using_Wallaroo"></a>Using Wallaroo</h2>
 
-<p>Using Wallaroo you will be able to separate the setup phase (object building and wiring) from the logic of your classes. In addition, you will be able to change the class of your objects without rebuilding anything: in this way you can change the behaviour of your application, or perform mock testing using the same executable. </p>
+<p>Using Wallaroo you will be able to separate the setup phase (object building and wiring) from the logic of your classes. In addition, you will be able to change the class of your objects without rebuilding anything: in this way you can change the behavior of your application, or perform mock testing using the same executable. </p>
 
 <p>With Wallaroo you will be able to focus on the logic of your classes, without worrying about the wiring phase. </p>
 
 <p>This mechanism is called <strong>Dependency Injection</strong>. Someone calls it <strong>Inversion of Control</strong>, 
-but actually that has a broader meaning (see <a href="http://martinfowler.com/articles/injection.html" rel="nofollow">here</a>). </p>
+but actually, that has a broader meaning (see <a href="http://martinfowler.com/articles/injection.html" rel="nofollow">here</a>). </p>
 
 <h3><a name="Parts_and_Collaborators"></a>Parts and Collaborators</h3>
 
@@ -124,7 +123,7 @@ You can add a dependency from a part to another by linking a collaborator of the
 <h3><a name="Basics"></a>Basics</h3>
 
 <p>To be instantiable by <strong>wallaroo</strong>, a class must derive from <tt>wallaroo::Part</tt>. 
-So, to make a class <tt>Car</tt> instantiable by <strong>wallaroo</strong>, you must declare it in an header file in this way: </p>
+So, to make a class <tt>Car</tt> instantiable by <strong>wallaroo</strong>, you must declare it in a header file in this way: </p>
 
 <pre><code class="language-cpp">
 
@@ -249,7 +248,7 @@ a <tt>Wallaroo::DeletedPartError</tt> exception. </p>
 Collaborator&lt; Book, collection &gt; library;
 </code></pre>
 
-<p>by default, in this case wallaroo will use std::vector. However, you can specify another std container in this way: </p>
+<p>by default, in this case, wallaroo will use std::vector. However, you can specify another std container in this way: </p>
 
 <pre><code class="language-cpp">
 Collaborator&lt; Book, collection, std::list &gt; library;
@@ -315,8 +314,9 @@ use( myCatalog[ &quot;m139p&quot; ] ).as( &quot;engine&quot; ).of( myCatalog[ &q
 <p>By using strings, both creation and wiring information can be loaded from a configuration file or external DB. </p>
 
 <p>You can build your own mechanism to load a spec from a file and fill a <tt>wallaroo::Catalog</tt> 
-with the objects built and configured or you can use the <tt>wallaroo::XmlConfiguration</tt> or 
-<tt>wallaroo::JsonConfiguration</tt> classes, that let you fill a catalog loading respectively an xml or json 
+with the objects built and configured or you can use the <tt>wallaroo::XmlConfiguration</tt>,  
+<tt>wallaroo::JsonConfiguration</tt> or <tt>wallaroo::Configuration</tt> classes,
+that let you fill a catalog loading respectively an xml or json 
 file (the syntax is explained <a href="wiring.html">here</a>). </p>
 
 <p>This is the content of the xml file: </p>
@@ -440,6 +440,22 @@ file (the syntax is explained <a href="wiring.html">here</a>). </p>
 
 </code></pre>
 
+<p>And, finally, this is the content of the wal file: </p>
+
+<pre><code class="language-bash">
+    ferrari_f430 = new Car( color="red" );
+    maserati_granturismo = new Car( color="black" );
+    
+    m139p = new Engine;
+    f136e = new Engine;
+    
+    ferrari_f430.mainEngine = f136e;
+    maserati_granturismo.mainEngine = m139p;
+</code></pre>
+
+(Please, note that in the wal file we assign a <tt>color</tt> <b>attribute</b>, and not a constructor <b>parameter</b>:
+this because the wal syntax does not provide support for constructor parameters).
+    
 <p>So, instead of populating manually the catalog, you can do it by loading a xml file: </p>
 
 <pre><code class="language-cpp">
@@ -452,12 +468,20 @@ file.Fill( catalog );
 
 <p>or, a json file: </p>
 
-<p>So, instead of populating manually the catalog, you can do it by loading a xml file: </p>
-
 <pre><code class="language-cpp">
 
 Catalog catalog;
 JsonConfiguration file( &quot;wiring.json&quot; );
+file.Fill( catalog );
+
+</code></pre>
+
+<p>or, a wal file: </p>
+
+<pre><code class="language-cpp">
+
+Catalog catalog;
+Configuration file( &quot;wiring.wal&quot; );
 file.Fill( catalog );
 
 </code></pre>
@@ -496,11 +520,11 @@ Car::Car()
 
 </code></pre>
 
-<p>Please note that in this case you use <tt>WALLAROO_DYNLIB_REGISTER</tt> instead of <tt>WALLAROO_REGISTER</tt>.
+<p>Please note that in this case, you use <tt>WALLAROO_DYNLIB_REGISTER</tt> instead of <tt>WALLAROO_REGISTER</tt>.
 You must include &quot;dynamic_lib.h&quot; only once per library and &quot;dyn_registered.h&quot;
 in every translation unit where you use <tt>WALLAROO_DYNLIB_REGISTER</tt>. </p>
 
-<p>The current version of wallaroo only support the definition of classes with zero-parameters constructor in shared libraries. </p>
+<p>The current version of wallaroo only supports the definition of classes with zero-parameters constructor in shared libraries. </p>
 
 <p>To load the classes definition, you must use the static method <tt>Plugin::Load()</tt> at the beginning of your application: </p>
 
@@ -571,6 +595,18 @@ catalog.Create( &quot;maserati_granturismo&quot;, &quot;Car&quot; );
     ]
   }
 }
+
+</code></pre>
+
+
+<p>or </p>
+
+<pre><code class="language-bash">
+
+@load "car";
+@load "engine;
+
+...
 
 </code></pre>
 

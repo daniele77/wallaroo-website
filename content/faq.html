@@ -21,7 +21,7 @@ type: doc
 <p>
 <ul><li><a href="#What&#x27;s_Wallaroo?">What's Wallaroo?</a></li>
 <li><a href="#Is_it_multiplatform?">Is it multiplatform?</a></li>
-<li><a href="#Then,_why_do_you_provide_the_.zip_and_.tgz_version_in_the_downlo">Then, why do you provide the .zip and .tgz version in the download page?</a></li>
+<li><a href="#Then,_why_do_you_provide_the_.zip_and_.tgz_version_on_the_downlo">Then, why do you provide the .zip and .tgz version on the download page?</a></li>
 <li><a href="#Do_I_need_to_compile_the_library?">Do I need to compile the library?</a></li>
 <li><a href="#Can_I_use_Wallaroo_into_an_embedded_system?">Can I use Wallaroo into an embedded system?</a></li>
 <li><a href="#Does_Wallaroo_use_C++11?">Does Wallaroo use C++11?</a></li>
@@ -35,6 +35,7 @@ type: doc
 <li><a href="#Can_I_use_wallaroo_in_a_commercial_product?">Can I use wallaroo in a commercial product?</a></li>
 <li><a href="#Does_Wallaroo_need_custom_preprocessors_/_code_generators?">Does Wallaroo need custom preprocessors / code generators?</a></li>
 <li><a href="#Is_Wallaroo_intrusive?">Is Wallaroo intrusive?</a></li>
+<li><a href="#Are_XML_and_JSON_verbose?">I find XML and JSON files too verbose. Is there a good alternative?</a></li>
 <li><a href="#Can_I_contribute_to_the_project?">Can I contribute to the project?</a></li>
 <li><a href="#Why_is_it_called">Why is it called &quot;Wallaroo&quot;?</a></li>
 <li><a href="#I&#x27;d_like_to_thank_you_for_the_great_library_you_wrote_:-)">I'd like to thank you for the great library you wrote :-)</a></li>
@@ -46,17 +47,17 @@ type: doc
 <p>Wallaroo is basically a <strong>dependency injection</strong> library for C++. 
 It provides a way to build and wire the objects you need in your application using strings and/or 
 loading a configuration file. With Wallaroo, you get rid of <tt>new</tt> constructs.  
-In this way, the name of the concrete classes you want to use are no more carved in the stone (i.e. in your code). 
-Your classes can be created starting from a specifications of some kind (configuration files, DBs, 
+In this way, the names of the concrete classes you want to use are no more carved in the stone (i.e. in your code). 
+Your classes can be created starting from specifications of some kind (configuration files, DBs, 
 environment variables, or a mix of them). </p>
 
 <h2><a name="Is_it_multiplatform?"></a>Is it multiplatform?</h2>
 
-<p>Of course it is. Wallaroo is implemented by using standard C++ and (optionally) 
-boost libraries and does not make assumptions on the underlying system. 
+<p>Of course, it is. Wallaroo is implemented by using standard C++ and (optionally) 
+boost libraries and does not make assumptions about the underlying system. 
 Thus, you can use it on every platform providing it has a decent C++ compiler. </p>
 
-<h2><a name="Then,_why_do_you_provide_the_.zip_and_.tgz_version_in_the_downlo"></a>Then, why do you provide the .zip and .tgz version in the download page?</h2>
+<h2><a name="Then,_why_do_you_provide_the_.zip_and_.tgz_version_on_the_downlo"></a>Then, why do you provide the .zip and .tgz version on the download page?</h2>
 
 <p>Wallaroo is delivered in a ZIP file for Windows users and in a compressed TAR file (.tgz) for Unix/Linux users. 
 Both archives contain the same files, the only difference is that all text files in the ZIP files 
@@ -91,7 +92,7 @@ instead of boost smart pointers (e.g.: <tt>boost::shared_ptr</tt>). </p>
 (if you&#x27;re working with another compiler, please 
 <a href="mailto:wallaroolibrary@gmail.com" rel="nofollow">contact me</a> to help me verify 
 the auto-detection mechanism). </p>
-<p>You can change the default behaviour of wallaroo by using two compile time symbols. 
+<p>You can change the default behavior of wallaroo by using two compile time symbols. 
 To impose the use of boost libraries, you can define the symbol <tt>WALLAROO_FORCE_USE_BOOST</tt>. 
 In the same way, to impose the use of std smart pointers in wallaroo interface, 
 you can define the symbol <tt>WALLAROO_FORCE_USE_STD</tt>. </p>
@@ -117,7 +118,7 @@ WALLAROO_REGISTER( Foo&lt; double &gt; )
 </code></pre>
 
 <p>Then, you can use the strings <tt>Foo&lt; int &gt;</tt> and <tt>Foo&lt; double &gt;</tt> in wallaroo DSL, 
-XML and JSON. </p>
+XML, JSON and WAL. </p>
 <p>Pay attention that: 
 <ul>
 <li>you must use the exact string you wrote in the registration line (e.g., with the example above, 
@@ -183,7 +184,7 @@ or linking object files directly. </p>
 <pre><code class="language-bash">
     gcc -Lmy_libs_path -lmain -Wl,--whole-archive -lMyLib1 -lMyLib2 -Wl,--no-whole-archive -o exe_name
 </code></pre>
-<li>with every compiler you can add a dummy symbol to your library and explicitly use it inside your main program. </li>
+<li>with every compiler, you can add a dummy symbol to your library and explicitly use it inside your main program. </li>
 
 <pre><code class="language-cpp">
 // static library
@@ -224,14 +225,20 @@ int main()
 
 <p>Anyway, I have personally tested the library with the following compilers: 
 <ul>
+<li>Microsoft Visual C++ 2017 Express edition (with and without boost) </li>
+<li>Microsoft Visual C++ 2015 Express edition (with and without boost) </li>
 <li>Microsoft Visual C++ 2013 Premium (with and without boost) </li>
 <li>Microsoft Visual C++ 2012 Express edition (with and without boost) </li>
 <li>Microsoft Visual C++ 2010 Express edition (with and without boost) </li>
 <li>Microsoft Visual C++ 2008 Express edition (with boost) </li>
+<li>GNU gcc v. 4.9.2 (with and without boost) </li>
 <li>GNU gcc v. 4.7.2 (with and without boost) </li>
 <li>GNU gcc v. 4.6.3 (with and without boost) </li>
 <li>GNU gcc v. 4.3.0 (with boost) </li>
 <li>GNU gcc v. 4.2.2 (with boost) </li>
+<li>clang v. 5.0 (with and without boost) </li>
+<li>clang v. 4.0 (with and without boost) </li>
+<li>clang v. 3.5 (with and without boost) </li>
 </ul>
 </p>
 
@@ -244,18 +251,22 @@ that states you can do basically everything with my library. </p>
 
 <h2><a name="Does_Wallaroo_need_custom_preprocessors_/_code_generators?"></a>Does Wallaroo need custom preprocessors / code generators?</h2>
 
-<p>No, Wallaroo does not need any custom build step. This was a basic criteria driving the design of the 
+<p>No, Wallaroo does not need any custom build step. This was a basic criterion driving the design of the 
 whole library. Unfortunately, when you try to develop dependency injection in C++ without custom 
 preprocessors / code generators, you end up building an intrusive library.  </p>
 
 <h2><a name="Is_Wallaroo_intrusive?"></a>Is Wallaroo intrusive?</h2>
 
-<p>Yes it is. This basically means that you need to derive your classes from <tt>wallaroo::Part</tt> 
+<p>Yes, it is. This basically means that you need to derive your classes from <tt>wallaroo::Part</tt> 
 in order to be managed by wallaroo. If you only need to manage 3rd party classes (that you cannot modify) 
 and you just need the &quot;creation&quot; feature, you can actually solve the problem by writing a wrapper 
-of 3rd party classes (the usual indirection layer that solve every CS problem :-) . 
+of 3rd party classes (the usual indirection layer that solves every CS problem :-) . 
 However, in this way you cannot exploit the &quot;wiring&quot; feature of wallaroo. 
 I&#x27;m planning to add an option to use a non-intrusive mechanism at least for the creation feature in wallaroo. </p>
+
+<h2><a name="Are_XML_and_JSON_verbose?"></a>I find XML and JSON files too verbose. Is there a good alternative?</h2>
+
+<p>Yes, there is. You should use wallaroo wiring file syntax (WAL) that is really compact and similar to C++. </p>
 
 <h2><a name="Can_I_contribute_to_the_project?"></a>Can I contribute to the project?</h2>
 

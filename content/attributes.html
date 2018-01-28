@@ -116,6 +116,14 @@ Triangle::Triangle() :
       },
 </code></pre>
 
+<h2><a name="WAL_file_syntax"></a>WAL file syntax</h2>
+
+<p>This is a sample of a WAL file example: </p>
+
+<pre><code class="language-bash">
+triangle1 = new Triangle( base=10, height=20 );
+</code></pre>
+
 <h1><a name="Object_setup_after_attributes_initialization"></a>Object setup after attributes initialization</h1>
 
 <p>With wallaroo attributes you can work around the limit on contructor parameters. 
@@ -125,13 +133,13 @@ However, using attributes instead of constructor parameters requires some care. 
 possibly using the constructor parameters. </p>
 
 <p>However, the attribute assignment is performed after the objects are created, i.e. after the constructor calls. 
-This means that inside the constructors your attributes have undefined value, so you cannot use attributes inside 
+This means that inside the constructors your attributes have an undefined value, so you cannot use attributes inside 
 the constructors. </p>
 
 <p>To solve this issue, wallaroo provides the methods <tt>Catalog::Init()</tt> and <tt>Part::Init()</tt>. </p>
 
-<p>If you need the attributes value to perform the initialization of an object, you can override the virtual 
-method <tt>Part::Init()</tt>. Inside this method you can put the initialization of your object 
+<p>If you need the values of attributes to perform the initialization of an object, you can override the virtual 
+method <tt>Part::Init()</tt>. Inside this method, you can put the initialization of your object 
 (the code put in the ctor) safely assuming the attributes value are correct. </p>
 
 <p>The method <tt>Catalog::Init()</tt> calls <tt>Part::Init()</tt> for each object contained in the <tt>Catalog</tt>. 

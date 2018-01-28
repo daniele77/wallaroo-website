@@ -21,6 +21,10 @@ To generate sitemap xml, you need the gem:
 
     gem install builder
 
+To use the internal web-server for preview:
+
+    gem install adsf
+
 ## Compile
 
     nanoc

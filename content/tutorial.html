@@ -9,7 +9,7 @@ type: doc
 <blockquote>The primary purpose of the dependency injection pattern is to allow selection among multiple 
 implementations of a given dependency interface at runtime, or via configuration files, instead of at compile time. 
 The pattern is particularly useful for providing &quot;mock&quot; test implementations of complex components
-when testing; but is often used for locating plugin components, or locating and initializing software services. 
+when testing but is often used for locating plugin components, or locating and initializing software services. 
 </blockquote>
 
 <h2><a name="Motivation"></a>Motivation</h2>
@@ -78,7 +78,7 @@ private:
 instead of <tt>PumpEngine</tt>. There are two solutions: 
 <ul>
 <li>you can create the right instance in <tt>SumpPump</tt> constructor </li>
-<li>you can pass the instance of <tt>SafeEngine</tt> as parameter in  <tt>SumpPump</tt> constructor </li>
+<li>you can pass the instance of <tt>SafeEngine</tt> as a parameter in the <tt>SumpPump</tt> constructor </li>
 </ul>
 
 The two alternatives are shown below: </p>
@@ -113,16 +113,16 @@ public:
 <p>Both the solutions have problems. </p>
 
 <p>In the first, you have to modify the code of <tt>SumpPump</tt> if you want to use a different engine. 
-Besides, you need to provide the <tt>SafeEngine</tt> constructor parameters to <tt>SumpPump</tt> 
+Besides, you need to provide the <tt>SafeEngine</tt> constructor parameters to the <tt>SumpPump</tt> 
 constructor (and so, you have to modify also the code that creates SumpPump instances). </p>
 
 <p>The second solution is better: you don&#x27;t change <tt>SumpPump</tt> code, yet you can&#x27;t 
-swap the behaviour without recompiling your application. </p>
+swap the behavior without recompiling your application. </p>
 
 <h2><a name="Enter_Wallaroo"></a>Enter Wallaroo</h2>
 
-<p>Instead, I really would like to be able to change the type of the classes withouth modifying them 
-and withouth propagate dependencies in the whole class tree. </p>
+<p>Instead, I really would like to be able to change the type of the classes without modifying them 
+and without propagating dependencies in the whole class tree. </p>
 
 <p>Let&#x27;s say I want the freedom to choose late the concrete classes of <tt>probe</tt> and <tt>engine</tt> 
 dependencies in <tt>SumpPump</tt>. </p>
@@ -233,6 +233,8 @@ for a detailed description): </p>
 
 &lt;/wallaroo&gt;
 </code></pre>
+
+<p>(If you think the xml file is a bit too verbose you should use <a href="wiring.html">wal format</a> instead)</p>
 
 <p>You can also decide to put your classes in shared libraries. Let&#x27;s say you wanna put <tt>SafeEngine</tt> 
 class in a .dll or .so. You just substitute the macro <tt>WALLAROO_REGISTER</tt> with <tt>WALLAROO_DYNLIB_REGISTER</tt> 

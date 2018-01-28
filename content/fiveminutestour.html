@@ -72,7 +72,7 @@ Car::Car :
 }
 </code></pre>
 
-<p>You can create instances of your registered classes and store them inside a catalog:</p>
+<p>You can create instances of your registered classes and store them in a catalog:</p>
 
 <pre><code class="language-cpp">
 #include "wallaroo/catalog.h"
@@ -123,12 +123,12 @@ you can use <tt>Catalog::IsWiringOk()</tt> (returns a bool) or
 shared_ptr< Car > maserati = catalog[ "maserati_granturismo" ];
 </code></pre>
 
-<p>If you want, you can load the objects and/or the wiring from xml or json configuration files,
-by using <tt>XmlConfiguration</tt> and <tt>JsonConfiguration</tt>:</p>
+<p>If you want, you can load the objects and/or the wiring from xml, json or wal configuration files,
+by using <tt>XmlConfiguration</tt> , <tt>JsonConfiguration</tt> and <tt>Configuration</tt> respectively:</p>
 
 <pre><code class="language-cpp">
 Catalog catalog;
-XmlConfiguration file( "wiring.xml" );
+XmlConfiguration file( "wiring.xml" ); // or JsonConfiguration or Configuration
 file.Fill( catalog );
 </code></pre>
 
